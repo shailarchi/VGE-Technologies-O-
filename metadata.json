@@ -1,0 +1,6 @@
+{
+  "name": "VGE Technologies - Energy Analytics SaaS",
+  "description": "Enterprise energy analytics & B2B SaaS platform for commercial solar developers by VGE Technologies OÜ (Verde Grid Energy). Track IoT data, automate ESG reporting, and manage global asset yields.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
