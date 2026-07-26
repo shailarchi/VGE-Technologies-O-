@@ -11,46 +11,52 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ onNavigateSect
 
   const features = [
     {
-      id: 'iot',
+      id: 'underwriting',
+      icon: ShieldCheck,
+      moduleNumber: 'Module 1',
+      title: 'Digital Underwriting',
+      targetAudience: 'For raising capital for new projects',
+      shortDesc: 'Automate risk modeling, cashflow verification, and debt origination for Asian C&I solar projects. Connect directly with global Web3 capital pools to accelerate project financing.',
+      badge: 'Capital Origination',
+      details: [
+        'Instant algorithmic risk scoring for C&I rooftop and ground-mounted Asian solar assets',
+        'Direct smart-contract liquidity pool onboarding for institutional Web3 debt investors',
+        'Automated multi-currency PPA cashflow settlement with real-time on-chain auditing',
+        'Cross-border SPV legal structure templates bridging Estonia (EU) with APAC jurisdictions'
+      ],
+      kpi: 'Accelerated Capital Raising'
+    },
+    {
+      id: 'verification',
       icon: Cpu,
-      title: 'Real-Time IoT Tracking',
-      shortDesc: 'Connect your commercial solar inverters directly to our cloud infrastructure via secure API. Track yield generation and hardware health metrics with 99.9% uptime.',
-      badge: 'MQTT & REST Ingress',
+      moduleNumber: 'Module 2',
+      title: 'Institutional-Grade Asset Verification',
+      targetAudience: 'Using IoT/Oracles to track live energy data securely',
+      shortDesc: 'Connect major inverters (Growatt, Huawei, Sungrow) via zero-hardware APIs. Cryptographic IoT data oracles give institutional investors real-time, tamper-proof energy telemetry.',
+      badge: 'IoT & Cryptographic Oracles',
       details: [
-        'Direct hardware telemetry integration with Huawei, SMA, Sungrow, Fronius & ABB inverters',
-        'Sub-second string voltage & temperature anomaly detection',
-        'Automated alarm routing to O&M field technician dispatch systems',
-        'Edge-to-cloud encrypted telemetry buffering during grid offline events'
+        'Zero-hardware inverter telemetry integration with Growatt, Huawei, Sungrow, Solis & SMA',
+        'Cryptographic data oracles feeding immutable generation logs to lenders & investors',
+        'AI anomaly detection for string failure, thermal hotspots, and grid curtailment events',
+        'Automated dispatch for regional Operations & Maintenance (O&M) field engineering teams'
       ],
-      kpi: 'Sub-second Data Ingestion'
+      kpi: 'Tamper-Proof Data Oracles'
     },
     {
-      id: 'esg',
-      icon: FileSpreadsheet,
-      title: 'Automated ESG Reporting',
-      shortDesc: 'Our software compiles your raw energy data into auditable, exportable sustainability reports, making carbon offset tracking seamless for your corporate clients.',
-      badge: 'CSRD & GHG Compliant',
-      details: [
-        'EU Directive (CSRD) & GRI alignment for enterprise sustainability disclosures',
-        'Scope 1, Scope 2, and Scope 3 carbon offset verification with cryptographic hashes',
-        'Automated PDF, CSV, and XBRL report generation for corporate off-takers',
-        'Real-time avoided CO₂ calculations based on localized regional grid emission factors'
-      ],
-      kpi: '100% Audit Readiness'
-    },
-    {
-      id: 'ppa',
+      id: 'carbon-yield',
       icon: TrendingUp,
-      title: 'B2B Yield Management',
-      shortDesc: 'Monitor your entire Commercial & Industrial (C&I) solar portfolio across multiple regions. Generate automated invoicing and digital Power Purchase Agreements (PPAs).',
-      badge: 'Digital PPA Contracts',
+      moduleNumber: 'Module 3',
+      title: 'Carbon Yield Optimization',
+      targetAudience: 'The automated minting and selling of I-RECs',
+      shortDesc: 'Automatically convert verified kilowatt-hours into I-RECs and tokenized carbon credit yields. Direct on-chain minting and secondary market settlement unlock recurring revenues.',
+      badge: 'Automated I-REC Minting',
       details: [
-        'Multi-currency PPA revenue reconciliation across Nord Pool, MIBEL, and EEX markets',
-        'Automated monthly generation settlement invoicing for industrial off-takers',
-        'BESS (Battery Energy Storage) arbitrage optimization & peak shaving controls',
-        'Cross-border portfolio aggregation with multi-entity tax and regulatory compliance'
+        'Automated digital Monitoring, Reporting & Verification (dMRV) with zero manual paperwork',
+        'Direct minting and automated sales of verified I-RECs and high-integrity carbon credits',
+        'Instant secondary liquidity settlement connecting EPC assets with corporate ESG buyers',
+        'Full alignment with EU CSRD, GHG Protocol & International REC Standard (I-REC)'
       ],
-      kpi: 'Automated PPA Settlement'
+      kpi: 'Automated I-REC Monetization'
     }
   ];
 
@@ -60,14 +66,15 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ onNavigateSect
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="text-[#4ADE80] font-mono text-xs font-semibold uppercase tracking-wider mb-2">
-            Enterprise SaaS Architecture
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#16A34A]/15 border border-[#16A34A]/30 text-[#4ADE80] font-mono text-xs font-semibold uppercase tracking-wider mb-4">
+            <Layers className="w-3.5 h-3.5" />
+            Built for Solar EPCs & Developers
           </div>
           <h2 className="font-heading text-3xl sm:text-4xl font-bold text-white tracking-tight mb-4">
-            Purpose-Built for Commercial & Industrial Solar Portfolios
+            3 Distinct Pillars for EPCs
           </h2>
-          <p className="text-[#94A3B8] text-base sm:text-lg">
-            VGE Technologies OÜ bridges physical clean energy assets with high-frequency cloud intelligence and European enterprise regulatory standards.
+          <p className="text-[#94A3B8] text-base sm:text-lg leading-relaxed">
+            Verde Grid Energy empowers EPC contractors and solar developers with three integrated modules to accelerate project financing, ensure tamper-proof data telemetry, and maximize recurring carbon yield revenues.
           </p>
         </div>
 
@@ -81,38 +88,46 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ onNavigateSect
               <div
                 key={item.id}
                 onClick={() => setActiveTab(idx)}
-                className={`group bg-slate-900/40 p-8 rounded-2xl border transition-all duration-300 cursor-pointer relative overflow-hidden flex flex-col justify-between backdrop-blur-sm ${
+                className={`group bg-slate-900/50 p-8 rounded-2xl border transition-all duration-300 cursor-pointer relative overflow-hidden flex flex-col justify-between backdrop-blur-sm ${
                   isSelected 
-                    ? 'border-[#4ADE80] shadow-xl shadow-[#16A34A]/10 bg-slate-800/80' 
-                    : 'border-white/5 hover:border-[#4ADE80]/40 hover:-translate-y-1'
+                    ? 'border-[#4ADE80] shadow-xl shadow-[#16A34A]/15 bg-slate-800/90' 
+                    : 'border-white/10 hover:border-[#4ADE80]/50 hover:-translate-y-1'
                 }`}
               >
                 <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <div className={`p-3 rounded-xl ${isSelected ? 'bg-[#16A34A] text-white' : 'bg-slate-800 text-[#4ADE80]'}`}>
-                      <Icon className="w-6 h-6" />
-                    </div>
-                    <span className="text-[11px] font-mono font-semibold px-3 py-1 rounded-full bg-[#16A34A]/10 text-[#4ADE80] border border-[#16A34A]/20">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-mono font-bold px-3 py-1 rounded-md bg-[#16A34A] text-white">
+                      {item.moduleNumber}
+                    </span>
+                    <span className="text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full bg-[#16A34A]/10 text-[#4ADE80] border border-[#16A34A]/30">
                       {item.badge}
                     </span>
                   </div>
 
-                  <h3 className="font-heading text-2xl font-bold text-white mb-3 group-hover:text-[#4ADE80] transition-colors">
+                  <div className="p-3.5 rounded-xl bg-slate-800/80 text-[#4ADE80] inline-block mb-4 border border-white/5">
+                    <Icon className="w-6 h-6" />
+                  </div>
+
+                  <h3 className="font-heading text-xl font-bold text-white mb-1 group-hover:text-[#4ADE80] transition-colors">
                     {item.title}
                   </h3>
 
-                  <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                  <p className="text-[#4ADE80] font-mono text-xs font-semibold mb-4 leading-normal bg-[#16A34A]/10 p-2 rounded-lg border border-[#16A34A]/20">
+                    {item.targetAudience}
+                  </p>
+
+                  <p className="text-slate-300 text-sm leading-relaxed mb-6">
                     {item.shortDesc}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+                <div className="pt-4 border-t border-white/10 flex items-center justify-between">
                   <span className="text-xs font-mono text-slate-400 flex items-center gap-1">
                     <Zap className="w-3.5 h-3.5 text-[#4ADE80]" />
                     {item.kpi}
                   </span>
                   <span className="text-xs font-semibold text-[#4ADE80] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                    {isSelected ? 'Viewing Details' : 'Explore Feature'}
+                    {isSelected ? 'Viewing Details' : 'Explore Pillar'}
                     <ArrowUpRight className="w-4 h-4" />
                   </span>
                 </div>

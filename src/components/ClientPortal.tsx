@@ -3,10 +3,11 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend 
 } from 'recharts';
 import { 
-  Sun, Activity, Cpu, DollarSign, Leaf, RefreshCw, AlertTriangle, ShieldCheck, Zap, Download, Radio, Filter, Building2, SlidersHorizontal 
+  Sun, Activity, Cpu, DollarSign, Leaf, RefreshCw, AlertTriangle, ShieldCheck, Zap, Download, Radio, Filter, Building2, SlidersHorizontal, CheckCircle2, ArrowRight
 } from 'lucide-react';
 import { INITIAL_PLANTS, HOURLY_GENERATION_DATA, SAMPLE_INVERTERS, ACTIVE_PPA_CONTRACTS } from '../data/mockData';
 import { SolarPlant, InverterTelemetry } from '../types';
+import { VerdeGridLogo } from './VerdeGridLogo';
 
 interface ClientPortalProps {
   onExitPortal: () => void;
@@ -42,19 +43,18 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal }) => {
   });
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-white pt-20 pb-16 px-4 sm:px-6 lg:px-8 font-body">
+    <div className="min-h-screen bg-[#0F172A] text-white pt-8 pb-16 px-4 sm:px-6 lg:px-8 font-body">
       
       {/* Top Portal Banner */}
       <div className="max-w-7xl mx-auto">
         <div className="bg-[#1E293B] border border-[#16A34A]/40 rounded-2xl p-6 mb-8 shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-[#16A34A] text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-[#16A34A]/30">
-              ⚡
-            </div>
+            <VerdeGridLogo size="lg" showTagline={true} darkBg={true} />
+            <div className="hidden sm:block h-10 w-[1px] bg-white/10 mx-2" />
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="font-heading font-bold text-2xl text-white">
+                <h1 className="font-heading font-bold text-xl sm:text-2xl text-white">
                   Client Telemetry Portal
                 </h1>
                 <span className="bg-[#16A34A]/20 text-[#4ADE80] border border-[#16A34A]/40 text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
@@ -63,7 +63,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal }) => {
                 </span>
               </div>
               <p className="text-[#94A3B8] text-xs font-mono mt-1">
-                VGE Cloud Node: Tallinn EU-Central • Organization: Nordics Solar Enterprise AS
+                Verde Grid Energy Operating System • Node: Tallinn EU / APAC Gateway • Asian Solar Assets
               </p>
             </div>
           </div>
@@ -97,6 +97,56 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal }) => {
             </button>
           </div>
 
+        </div>
+
+        {/* Zero-Hardware Integration Highlight Banner */}
+        <div className="bg-gradient-to-r from-[#1E293B] via-[#0F172A] to-[#162132] border border-[#16A34A]/50 rounded-2xl p-6 mb-8 shadow-xl relative overflow-hidden backdrop-blur-md group">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-[#16A34A]/10 rounded-full blur-3xl pointer-events-none group-hover:bg-[#16A34A]/15 transition-all" />
+          
+          <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            <div className="space-y-2 max-w-4xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#16A34A]/15 border border-[#16A34A]/30 text-[#4ADE80] text-xs font-mono font-bold uppercase tracking-wider">
+                <Zap className="w-3.5 h-3.5 text-[#4ADE80] animate-pulse" />
+                Zero-Hardware Integration
+              </div>
+              
+              <h2 className="font-heading text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+                Zero-Hardware Integration
+              </h2>
+
+              <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-body">
+                “Connect your existing solar portfolio in 60 seconds. Our API integrates directly with major inverters (Growatt, Huawei) to instantly begin minting I-REC carbon credits without deploying physical hardware or disrupting your current operations.”
+              </p>
+
+              <div className="flex flex-wrap items-center gap-3 pt-2 text-xs font-mono text-slate-400">
+                <span className="flex items-center gap-1.5 bg-slate-900/60 px-2.5 py-1 rounded-md border border-white/5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#4ADE80]" />
+                  Growatt & Huawei Direct API
+                </span>
+                <span className="flex items-center gap-1.5 bg-slate-900/60 px-2.5 py-1 rounded-md border border-white/5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#4ADE80]" />
+                  Instant I-REC Carbon Minting
+                </span>
+                <span className="flex items-center gap-1.5 bg-slate-900/60 px-2.5 py-1 rounded-md border border-white/5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#4ADE80]" />
+                  60-Second Onboarding
+                </span>
+              </div>
+            </div>
+
+            <div className="shrink-0 w-full lg:w-auto">
+              <button 
+                onClick={() => {
+                  const el = document.getElementById('api-playground');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="w-full lg:w-auto bg-[#16A34A] hover:bg-[#15803D] text-white font-heading font-bold text-xs px-5 py-3 rounded-xl transition-all shadow-lg shadow-[#16A34A]/20 flex items-center justify-center gap-2 group cursor-pointer"
+              >
+                Connect Inverters via API
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Real-time KPI Stats Bar */}

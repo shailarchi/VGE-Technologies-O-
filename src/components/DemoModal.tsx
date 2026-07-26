@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, CheckCircle2, ArrowRight, ShieldCheck, Building, Mail, User, Globe } from 'lucide-react';
+import { VerdeGridLogo } from './VerdeGridLogo';
 
 interface DemoModalProps {
   isOpen: boolean;
@@ -36,15 +37,15 @@ export const DemoModal: React.FC<DemoModalProps> = ({ isOpen, onClose }) => {
 
         {!submitted ? (
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#16A34A]/20 text-[#4ADE80] border border-[#16A34A]/40 text-xs font-mono mb-4">
-              <ShieldCheck className="w-3.5 h-3.5" /> VGE Enterprise Onboarding
+            <div className="mb-4">
+              <VerdeGridLogo size="md" showTagline={true} darkBg={true} />
             </div>
 
-            <h3 className="font-heading text-2xl font-bold text-white mb-2">
+            <h3 className="font-heading text-xl sm:text-2xl font-bold text-white mb-2">
               Schedule Enterprise Demo
             </h3>
             <p className="text-[#94A3B8] text-xs font-mono mb-6">
-              Connect with our Tallinn energy analytics engineers for a custom SCADA integration review.
+              Connect with Verde Grid Energy engineers for a custom solar asset SCADA integration review.
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs font-mono">

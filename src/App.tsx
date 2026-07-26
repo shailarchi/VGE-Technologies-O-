@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
+import { LiveNetworkBanner } from './components/LiveNetworkBanner';
 import { Hero } from './components/Hero';
+import { TrustedByEpcSection } from './components/TrustedByEpcSection';
 import { FeaturesSection } from './components/FeaturesSection';
 import { YieldCalculator } from './components/YieldCalculator';
 import { ApiPlayground } from './components/ApiPlayground';
@@ -39,37 +41,47 @@ export default function App() {
         onNavigateSection={handleNavigateSection}
       />
 
-      {/* View Switch: Live Client Portal vs Enterprise Landing Page */}
-      {isDashboardOpen ? (
-        <ClientPortal onExitPortal={() => setIsDashboardOpen(false)} />
-      ) : (
-        <main>
-          {/* Hero Section */}
-          <Hero
-            onOpenDemo={() => setIsDemoModalOpen(true)}
-            onOpenDashboard={() => setIsDashboardOpen(true)}
-            onNavigateSection={handleNavigateSection}
-          />
+      {/* Main Container Push down for Fixed Navbar (h-20) */}
+      <div className="pt-20">
+        
+        {/* Live Network Banner with Real-time Counters */}
+        <LiveNetworkBanner />
 
-          {/* Features Grid: Real-time IoT, ESG Reporting, B2B Yield */}
-          <FeaturesSection
-            onNavigateSection={handleNavigateSection}
-            onOpenDemo={() => setIsDemoModalOpen(true)}
-          />
+        {/* View Switch: Live Client Portal vs Enterprise Landing Page */}
+        {isDashboardOpen ? (
+          <ClientPortal onExitPortal={() => setIsDashboardOpen(false)} />
+        ) : (
+          <main>
+            {/* Hero Section */}
+            <Hero
+              onOpenDemo={() => setIsDemoModalOpen(true)}
+              onOpenDashboard={() => setIsDashboardOpen(true)}
+              onNavigateSection={handleNavigateSection}
+            />
 
-          {/* Interactive B2B Solar Yield & Revenue Calculator */}
-          <YieldCalculator />
+            {/* Trusted by Leading Solar EPCs Banner */}
+            <TrustedByEpcSection />
 
-          {/* Developer REST & MQTT API Playground */}
-          <ApiPlayground />
+            {/* Features Grid: Real-time IoT, ESG Reporting, B2B Yield */}
+            <FeaturesSection
+              onNavigateSection={handleNavigateSection}
+              onOpenDemo={() => setIsDemoModalOpen(true)}
+            />
 
-          {/* Automated ESG & Carbon Audit Studio */}
-          <EsgStudio />
+            {/* Interactive B2B Solar Yield & Revenue Calculator */}
+            <YieldCalculator />
 
-          {/* Security & Estonian Compliance Section */}
-          <SecuritySection />
-        </main>
-      )}
+            {/* Developer REST & MQTT API Playground */}
+            <ApiPlayground />
+
+            {/* Automated ESG & Carbon Audit Studio */}
+            <EsgStudio />
+
+            {/* Security & Estonian Compliance Section */}
+            <SecuritySection />
+          </main>
+        )}
+      </div>
 
       {/* Corporate Legal Footer */}
       <Footer

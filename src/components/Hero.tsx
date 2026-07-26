@@ -9,7 +9,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenDemo, onOpenDashboard, onNavigateSection }) => {
   return (
-    <section id="hero" className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-[#0F172A] relative overflow-hidden">
+    <section id="hero" className="pt-12 sm:pt-16 pb-20 px-4 sm:px-6 lg:px-8 bg-[#0F172A] relative overflow-hidden">
       
       {/* Ambient Glowing Orbs - Elegant Dark Theme */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#16A34A] rounded-full blur-[140px] opacity-15 pointer-events-none" />
@@ -21,25 +21,25 @@ export const Hero: React.FC<HeroProps> = ({ onOpenDemo, onOpenDashboard, onNavig
       <div className="max-w-5xl mx-auto text-center relative z-10 pt-8">
         
         {/* Top Enterprise Badge with Ping Dot */}
-        <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#16A34A]/10 border border-[#16A34A]/25 text-[#4ADE80] text-xs font-mono font-bold uppercase tracking-wider mb-8 shadow-inner backdrop-blur-md">
+        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#16A34A]/10 border border-[#16A34A]/25 text-[#4ADE80] text-xs font-mono font-bold uppercase tracking-wider mb-8 shadow-inner backdrop-blur-md">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ADE80] opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#4ADE80]"></span>
           </span>
-          VGE SaaS v4.2 • Enterprise Energy Intelligence #17556598
+          VERDE GRID ENERGY • REAL ASSETS . REAL IMPACT . REAL YIELD
         </div>
 
         {/* Main Heading */}
         <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-[1.15]">
-          Intelligent Cloud Analytics for <br className="hidden sm:inline" />
+          Bridging Asian Commercial Solar Assets with <br className="hidden sm:inline" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4ADE80] to-[#22C55E]">
-            Renewable Infrastructure
+            Global Web3 Capital
           </span>
         </h1>
 
         {/* Subtitle */}
-        <p className="text-slate-400 text-lg sm:text-xl max-w-3xl mx-auto mb-10 font-normal leading-relaxed">
-          VGE Technologies OÜ provides secure, B2B Software-as-a-Service (SaaS) solutions for commercial solar developers. Track IoT data, automate ESG reporting, and manage global asset yields from a single enterprise dashboard.
+        <p className="text-slate-300 text-lg sm:text-xl max-w-3xl mx-auto mb-10 font-normal leading-relaxed">
+          VGE Technologies is the end-to-end operating system bridging Asian commercial solar assets with global Web3 capital. We automate the entire value chain: from digital underwriting, to IoT asset optimization, to automated carbon credit yields.
         </p>
 
         {/* Primary Action Buttons */}

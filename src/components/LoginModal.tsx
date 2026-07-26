@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Lock, Key, ArrowRight, ShieldCheck, UserCheck, Sparkles } from 'lucide-react';
+import { VerdeGridLogo } from './VerdeGridLogo';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -36,17 +37,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-2 mb-2">
-          <div className="w-7 h-7 rounded bg-[#16A34A] text-white font-bold flex items-center justify-center text-xs">
-            V
-          </div>
-          <span className="font-heading font-bold text-white text-lg">
-            Client Portal Login
-          </span>
+        <div className="mb-3">
+          <VerdeGridLogo size="md" showTagline={true} darkBg={true} />
         </div>
 
         <p className="text-[#94A3B8] text-xs font-mono mb-6">
-          VGE Technologies OÜ Secure B2B SSO Portal (Estonia EE-17556598)
+          Verde Grid Energy B2B SSO Portal (Estonia EE-17556598)
         </p>
 
         {/* Quick Demo Login Presets */}

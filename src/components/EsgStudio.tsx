@@ -30,11 +30,11 @@ export const EsgStudio: React.FC = () => {
               Auditable Compliance Studio
             </div>
             <h2 className="font-heading text-3xl sm:text-4xl font-bold text-white tracking-tight">
-              Automated EU ESG & Carbon Audit Generator
+              Automated Carbon Credit Yields & ESG Audit Generator
             </h2>
           </div>
           <p className="text-[#94A3B8] text-sm max-w-md mt-4 md:mt-0">
-            Convert raw solar IoT telemetry into verifiable disclosures aligned with European Corporate Sustainability Reporting Directive (CSRD) and GHG Protocol standards.
+            Convert Asian commercial solar IoT telemetry into verifiable disclosures and tokenized carbon credit yields aligned with EU CSRD, Verra dMRV, and Web3 capital standards.
           </p>
         </div>
 
@@ -57,9 +57,9 @@ export const EsgStudio: React.FC = () => {
                 <div className="space-y-2">
                   {[
                     'CSRD (EU Directive 2022/2464)',
+                    'Web3 Tokenized Carbon Yield (dMRV)',
                     'GHG Protocol Scope 1-3 Standards',
-                    'GRI Sustainability Standards',
-                    'EU Taxonomy Regulation'
+                    'EU Taxonomy & Verra Carbon Standards'
                   ].map((item) => (
                     <button
                       key={item}

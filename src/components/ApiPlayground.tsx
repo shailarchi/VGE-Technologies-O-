@@ -12,45 +12,43 @@ export const ApiPlayground: React.FC = () => {
 
 const vge = new VGEClient({
   apiKey: process.env.VGE_API_KEY,
-  region: 'eu-tallinn-1',
+  region: 'apac-asia-central',
   entityId: 'EE-17556598'
 });
 
-// Fetch real-time inverter string telemetry
-const telemetry = await vge.inverters.getLiveMetrics({
-  plantId: 'vge-est-01',
-  sampleRateSecs: 1
+// Digital Underwriting & Web3 Carbon Yield Oracle
+const underwriting = await vge.underwriting.evaluateAsset({
+  plantId: 'vge-vnm-05', // Binh Thuan C&I Solar Rooftop (Vietnam)
+  capacityMWp: 95.0,
+  web3CapitalVaultId: '0x9a8f7c6e5d4b3a21'
 });
 
-console.log(\`Active Power: \${telemetry.acPowerKW} kW, Voltage: \${telemetry.dcVoltageV} V\`);`,
+console.log(\`Underwriting Score: \${underwriting.riskGrade}, Web3 Carbon Yield: \${underwriting.monthlyCarbonYieldEUR} EUR\`);`,
 
-    curl: `curl -X GET "https://api.vge.ee/v1/inverters/telemetry?plant_id=vge-est-01" \\
+    curl: `curl -X POST "https://api.vge.ee/v1/underwriting/evaluate" \\
   -H "Authorization: Bearer vge_live_8817556598_key" \\
   -H "Content-Type: application/json" \\
-  -H "X-EU-Data-Locality: EE-Tallinn"`,
+  -d '{"plant_id": "vge-vnm-05", "web3_capital_vault": "0x9a8f7c6e5d4b3a21"}'`,
 
     python: `import requests
 
-url = "https://api.vge.ee/v1/inverters/telemetry"
-headers = {
-    "Authorization": "Bearer vge_live_8817556598_key",
-    "X-EU-Data-Locality": "EE-Tallinn"
-}
+url = "https://api.vge.ee/v1/underwriting/evaluate"
+headers = {"Authorization": "Bearer vge_live_8817556598_key"}
 
-response = requests.get(url, params={"plant_id": "vge-est-01"})
+payload = {"plant_id": "vge-vnm-05", "target_yield_type": "WEB3_CARBON_CREDIT"}
+response = requests.post(url, json=payload, headers=headers)
 data = response.json()
-print(f"Plant: {data['plant_name']}, Yield Today: {data['daily_yield_mwh']} MWh")`,
+print(f"Asset: {data['asset_name']}, Web3 APY Yield: {data['web3_capital_apy_pct']}%")`,
 
-    mqtt: `// MQTT Ingress Topic: vge/ee/tallinn/plant-01/inverters/stream
-// QoS: 1 (At Least Once), TLS 1.3
+    mqtt: `// MQTT Ingress Topic: vge/apac/vietnam/plant-05/telemetry
+// QoS: 1 (At Least Once), Web3 On-Chain Telemetry Buffer
 {
-  "device_id": "INV-TAL-001",
-  "timestamp_iso": "2026-07-22T06:05:01Z",
-  "ac_power_kw": 312.4,
-  "dc_voltage_v": 1080.2,
-  "efficiency_pct": 98.8,
-  "temperature_c": 44.2,
-  "status": "NORMAL_OPTIMAL"
+  "device_id": "INV-VNM-320",
+  "plant_id": "vge-vnm-05",
+  "ac_power_kw": 81400,
+  "daily_yield_mwh": 610.2,
+  "dmrv_carbon_minted_tonnes": 427.1,
+  "web3_vault_signature": "0x7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c"
 }`
   };
 
@@ -68,19 +66,21 @@ print(f"Plant: {data['plant_name']}, Yield Today: {data['daily_yield_mwh']} MWh"
       const mockResult = {
         status: 200,
         status_text: "OK",
-        server_node: "vge-cloud-tallinn-ee-01",
-        latency_ms: 18,
+        operating_system: "VGE End-to-End Clean Energy OS v4.2",
+        server_node: "vge-apac-gateway-singapore-01",
+        latency_ms: 12,
         data: {
-          plant_id: "vge-est-01",
-          plant_name: "Harju Solar Park I (Tallinn)",
-          capacity_mwp: 48.5,
-          active_power_mw: 36.2,
-          daily_yield_mwh: 218.4,
-          performance_ratio_pct: 86.2,
-          inverters_online: "160 / 160",
-          grid_frequency_hz: 50.02,
-          co2_offset_today_tonnes: 152.8,
-          eu_csrd_compliance_hash: "0x8f7a90b1c2d3e4f5a6b7c8d9e0f1a2b3"
+          plant_id: "vge-vnm-05",
+          asset_name: "Binh Thuan C&I Solar Rooftop (Vietnam)",
+          jurisdiction: "Vietnam / APAC",
+          digital_underwriting_grade: "AAA+ (Institutional Grade)",
+          capacity_mwp: 95.0,
+          active_power_mw: 81.4,
+          daily_yield_mwh: 610.2,
+          iot_inverters_online: "320 / 320",
+          web3_capital_liquidity_pool: "0x9a8f7c6e5d4b3a21",
+          automated_carbon_credit_yield_tonnes: 427.1,
+          dmrv_onchain_signature: "0x7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c"
         }
       };
       setApiResponse(JSON.stringify(mockResult, null, 2));
