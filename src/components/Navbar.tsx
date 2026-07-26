@@ -51,71 +51,79 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Brand Logo */}
         <div 
           onClick={() => handleNavClick('hero')} 
-          className="flex items-center cursor-pointer group hover:opacity-95 transition-opacity"
+          className="flex items-center cursor-pointer group hover:opacity-95 transition-all py-1"
           title="Verde Grid Energy - Home"
         >
-          <VerdeGridLogo size="md" showTagline={true} darkBg={true} />
+          <VerdeGridLogo size="md" align="left" showTagline={true} darkBg={true} />
         </div>
 
         {/* Navigation Links - Desktop */}
         <div className="hidden lg:flex items-center gap-6 xl:gap-8">
           <button 
             onClick={() => handleNavClick('solutions')} 
-            className="text-[#94A3B8] hover:text-[#4ADE80] text-sm font-medium transition-colors cursor-pointer"
+            className="text-slate-300 hover:text-[#4ADE80] text-xs xl:text-sm font-semibold tracking-wide transition-all cursor-pointer py-2 relative group"
           >
-            {t('solutions', 'Solutions')}
+            <span>{t('solutions', 'Solutions')}</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#4ADE80] rounded-full group-hover:w-full transition-all duration-200"></span>
           </button>
           <button 
             onClick={() => handleNavClick('calculator')} 
-            className="text-[#94A3B8] hover:text-[#4ADE80] text-sm font-medium transition-colors cursor-pointer"
+            className="text-slate-300 hover:text-[#4ADE80] text-xs xl:text-sm font-semibold tracking-wide transition-all cursor-pointer py-2 relative group"
           >
-            {t('calculator', 'Yield Calculator')}
+            <span>{t('calculator', 'Yield Calculator')}</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#4ADE80] rounded-full group-hover:w-full transition-all duration-200"></span>
           </button>
           <button 
             onClick={() => handleNavClick('api-integrations')} 
-            className="text-[#94A3B8] hover:text-[#4ADE80] text-sm font-medium transition-colors cursor-pointer"
+            className="text-slate-300 hover:text-[#4ADE80] text-xs xl:text-sm font-semibold tracking-wide transition-all cursor-pointer py-2 relative group"
           >
-            {t('apiIntegrations', 'API Integrations')}
+            <span>{t('apiIntegrations', 'API Integrations')}</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#4ADE80] rounded-full group-hover:w-full transition-all duration-200"></span>
           </button>
           <button 
             onClick={() => handleNavClick('esg-studio')} 
-            className="text-[#94A3B8] hover:text-[#4ADE80] text-sm font-medium transition-colors cursor-pointer"
+            className="text-slate-300 hover:text-[#4ADE80] text-xs xl:text-sm font-semibold tracking-wide transition-all cursor-pointer py-2 relative group"
           >
-            {t('esgCompliance', 'ESG Compliance')}
+            <span>{t('esgCompliance', 'ESG Compliance')}</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#4ADE80] rounded-full group-hover:w-full transition-all duration-200"></span>
           </button>
           <button 
             onClick={() => handleNavClick('security')} 
-            className="text-[#94A3B8] hover:text-[#4ADE80] text-sm font-medium transition-colors cursor-pointer"
+            className="text-slate-300 hover:text-[#4ADE80] text-xs xl:text-sm font-semibold tracking-wide transition-all cursor-pointer py-2 relative group"
           >
-            {t('security', 'Enterprise Security')}
+            <span>{t('security', 'Enterprise Security')}</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#4ADE80] rounded-full group-hover:w-full transition-all duration-200"></span>
           </button>
         </div>
 
         {/* Right CTA Actions & Language Selector - Desktop */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3.5">
           
           {/* Language Selector Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               type="button"
               onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-              className="flex items-center gap-2 bg-[#1E293B] hover:bg-slate-800 text-slate-200 border border-white/10 hover:border-[#16A34A]/50 px-3 py-2 rounded-lg text-xs font-mono font-medium transition-all cursor-pointer"
+              className="flex items-center gap-2 bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 hover:border-[#16A34A]/60 px-3 py-2 rounded-xl text-xs font-mono font-medium transition-all shadow-inner cursor-pointer"
               title="Select Platform Language"
             >
               <Globe className="w-3.5 h-3.5 text-[#4ADE80]" />
-              <span className="text-sm">{currentLanguage.flag}</span>
-              <span className="font-bold">{currentLanguage.code.toUpperCase()}</span>
-              <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${langDropdownOpen ? 'rotate-180' : ''}`} />
+              <span className="text-sm leading-none">{currentLanguage.flag}</span>
+              <span className="font-bold tracking-wider">{currentLanguage.code.toUpperCase()}</span>
+              <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${langDropdownOpen ? 'rotate-180 text-[#4ADE80]' : ''}`} />
             </button>
 
             {/* Language Menu Overlay */}
             {langDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-56 bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50 py-1.5 backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="px-3 py-1.5 border-b border-white/5 text-[10px] font-mono font-semibold uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
-                  <Globe className="w-3 h-3 text-[#4ADE80]" />
-                  Select Platform Language
+              <div className="absolute right-0 mt-2.5 w-60 bg-[#0B1329] border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden z-50 py-1.5 backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-200 ring-1 ring-white/10">
+                <div className="px-3.5 py-2 border-b border-slate-800 text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <Globe className="w-3 h-3 text-[#4ADE80]" />
+                    Global Language
+                  </span>
+                  <span className="text-[#4ADE80] font-extrabold">{LANGUAGES.length} Available</span>
                 </div>
-                <div className="max-h-64 overflow-y-auto divide-y divide-white/5">
+                <div className="max-h-64 overflow-y-auto divide-y divide-slate-800/50">
                   {LANGUAGES.map((lang) => {
                     const isSelected = currentLanguage.code === lang.code;
                     return (
@@ -126,20 +134,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                           setLanguage(lang);
                           setLangDropdownOpen(false);
                         }}
-                        className={`w-full text-left px-3.5 py-2 text-xs font-mono flex items-center justify-between transition-colors cursor-pointer ${
+                        className={`w-full text-left px-3.5 py-2.5 text-xs font-mono flex items-center justify-between transition-all cursor-pointer ${
                           isSelected 
-                            ? 'bg-[#16A34A]/20 text-[#4ADE80] font-bold' 
+                            ? 'bg-[#16A34A]/20 text-[#4ADE80] font-bold border-l-2 border-[#4ADE80]' 
                             : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
                         }`}
                       >
-                        <div className="flex items-center gap-2.5">
+                        <div className="flex items-center gap-3">
                           <span className="text-base">{lang.flag}</span>
                           <div>
-                            <div className="font-semibold">{lang.name}</div>
+                            <div className="font-semibold leading-tight">{lang.name}</div>
                             <div className="text-[10px] text-slate-400 font-sans">{lang.nativeName}</div>
                           </div>
                         </div>
-                        {isSelected && <Check className="w-4 h-4 text-[#4ADE80]" />}
+                        {isSelected && <Check className="w-4 h-4 text-[#4ADE80] shrink-0" />}
                       </button>
                     );
                   })}
@@ -150,20 +158,24 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button 
             onClick={onToggleDashboard}
-            className={`px-3.5 py-2 rounded-lg text-xs font-mono font-semibold flex items-center gap-2 border transition-all cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-2 border transition-all cursor-pointer shadow-sm ${
               isDashboardOpen 
-                ? 'bg-[#16A34A] text-white border-[#4ADE80]' 
-                : 'bg-[#1E293B] text-[#4ADE80] border-[#16A34A] hover:bg-[#16A34A] hover:text-white'
+                ? 'bg-[#16A34A] text-white border-[#4ADE80] shadow-emerald-900/50' 
+                : 'bg-slate-900/80 text-[#4ADE80] border-[#16A34A]/60 hover:bg-[#16A34A]/20 hover:border-[#4ADE80] hover:text-white'
             }`}
           >
-            <LayoutDashboard className="w-4 h-4" />
-            <span className="hidden xl:inline">{isDashboardOpen ? 'Exit Portal' : t('liveDashboardDemo', 'Live Dashboard Demo')}</span>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ADE80] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#4ADE80]"></span>
+            </span>
+            <LayoutDashboard className="w-3.5 h-3.5" />
+            <span className="hidden xl:inline">{isDashboardOpen ? 'Exit Portal' : t('liveDashboardDemo', 'Live Demo')}</span>
             <span className="xl:hidden">{isDashboardOpen ? 'Exit' : 'Demo'}</span>
           </button>
 
           <button 
             onClick={onOpenLogin}
-            className="bg-[#1E293B] text-[#4ADE80] border border-[#16A34A] px-4 py-2 rounded-lg font-heading text-xs sm:text-sm font-semibold hover:bg-[#16A34A] hover:text-white transition-all shadow-sm cursor-pointer whitespace-nowrap"
+            className="bg-gradient-to-r from-[#16A34A] to-[#15803D] hover:from-[#22C55E] hover:to-[#16A34A] text-white border border-[#4ADE80]/40 px-4 py-2 rounded-xl font-heading text-xs xl:text-sm font-bold transition-all shadow-md shadow-emerald-950/50 hover:shadow-emerald-500/20 active:scale-[0.98] cursor-pointer whitespace-nowrap"
           >
             {t('clientPortalLogin', 'Client Portal Login')}
           </button>

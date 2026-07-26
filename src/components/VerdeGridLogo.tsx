@@ -6,6 +6,7 @@ interface VerdeGridLogoProps {
   darkBg?: boolean;
   className?: string;
   showTagline?: boolean;
+  align?: 'left' | 'center';
 }
 
 export const VerdeGridLogo: React.FC<VerdeGridLogoProps> = ({
@@ -14,6 +15,7 @@ export const VerdeGridLogo: React.FC<VerdeGridLogoProps> = ({
   darkBg = true,
   className = '',
   showTagline = true,
+  align = 'center',
 }) => {
   // Size mapping
   const iconSizeMap = {
@@ -141,8 +143,8 @@ export const VerdeGridLogo: React.FC<VerdeGridLogoProps> = ({
 
       {/* Typography: VERDE GRID ENERGY */}
       {variant !== 'icon-only' && (
-        <div className="flex flex-col justify-center">
-          <div className={`flex items-center gap-1.5 font-heading tracking-tight leading-none font-black ${titleSizeMap[size]}`}>
+        <div className="flex flex-col justify-center items-center text-center">
+          <div className={`flex items-center justify-center gap-1.5 font-heading tracking-tight leading-none font-black ${titleSizeMap[size]}`}>
             <span className={`uppercase ${verdeTextColor}`}>
               VERDE GRID
             </span>
@@ -153,9 +155,9 @@ export const VerdeGridLogo: React.FC<VerdeGridLogoProps> = ({
 
           {/* Official Tagline: REAL ASSETS . REAL IMPACT . REAL YIELD */}
           {showTagline && (
-            <div className={`flex items-center gap-1 mt-1 font-mono font-extrabold tracking-wider uppercase ${taglineSizeMap[size]}`}>
+            <div className={`flex items-center justify-center gap-1 mt-1 font-mono font-extrabold tracking-wider uppercase ${taglineSizeMap[size]}`}>
               <span className="h-[2px] w-3 sm:w-4 bg-[#00B050] rounded-full inline-block shrink-0"></span>
-              <span className="whitespace-nowrap flex items-center gap-1">
+              <span className="whitespace-nowrap flex items-center justify-center gap-1">
                 <span className={assetsTextColor}>REAL ASSETS</span>
                 <span className="text-[#00B050] font-black">.</span>
                 <span className="text-[#00B050]">REAL IMPACT</span>
