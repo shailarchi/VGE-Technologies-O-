@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Terminal, Code, Play, Copy, Check, Server, ShieldCheck, Cpu } from 'lucide-react';
 
 export const ApiPlayground: React.FC = () => {
-  const [selectedLanguage, setSelectedLanguage] = useState<'curl' | 'ts' | 'python' | 'mqtt' | 'smart_meter'>('smart_meter');
+  const [selectedLanguage, setSelectedLanguage] = useState<'curl' | 'ts' | 'python' | 'mqtt'>('ts');
   const [copied, setCopied] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
   const [apiResponse, setApiResponse] = useState<string | null>(null);
@@ -49,20 +49,6 @@ print(f"Asset: {data['asset_name']}, Web3 APY Yield: {data['web3_capital_apy_pct
   "daily_yield_mwh": 610.2,
   "dmrv_carbon_minted_tonnes": 427.1,
   "web3_vault_signature": "0x7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c"
-}`,
-
-    smart_meter: `// Ingress Payload: VOLT Smart Meter (Gujarat, India)
-// Endpoint: POST /api/v1/telemetry/ingest
-{
-  "device_id": "VOLT-SMART-METER-IN-001",
-  "timestamp": "2026-07-31T09:00:00Z",
-  "energy_generated_kwh": 500,
-  "location": {
-    "lat": 21.1702,
-    "long": 72.8311,
-    "region": "Gujarat, India"
-  },
-  "status": "active"
 }`
   };
 
@@ -77,27 +63,7 @@ print(f"Asset: {data['asset_name']}, Web3 APY Yield: {data['web3_capital_apy_pct
     setApiResponse(null);
 
     setTimeout(() => {
-      const mockResult = selectedLanguage === 'smart_meter' ? {
-        status: 200,
-        status_text: "OK",
-        operating_system: "VGE End-to-End Clean Energy OS v4.2",
-        server_node: "vge-apac-gateway-mumbai-01",
-        latency_ms: 18,
-        data: {
-          device_id: "VOLT-SMART-METER-IN-001",
-          timestamp: "2026-07-31T09:00:00Z",
-          energy_generated_kwh: 500,
-          location: {
-            lat: 21.1702,
-            long: 72.8311,
-            region: "Gujarat, India"
-          },
-          status: "active",
-          co2_offset_tonnes: 0.325,
-          dlt_telemetry_hash: "0x5e8f21a92d10283c4b120938472f102938471203984712039847120398471203",
-          hmac_verified: true
-        }
-      } : {
+      const mockResult = {
         status: 200,
         status_text: "OK",
         operating_system: "VGE End-to-End Clean Energy OS v4.2",
@@ -157,9 +123,8 @@ print(f"Asset: {data['asset_name']}, Web3 APY Yield: {data['web3_capital_apy_pct
               </div>
 
               {/* Language Selector Tabs */}
-              <div className="flex items-center gap-1 bg-[#1E293B] p-1 rounded-lg border border-white/5 overflow-x-auto">
+              <div className="flex items-center gap-1 bg-[#1E293B] p-1 rounded-lg border border-white/5">
                 {[
-                  { id: 'smart_meter', label: 'Smart Meter Payload' },
                   { id: 'ts', label: 'TypeScript' },
                   { id: 'curl', label: 'cURL' },
                   { id: 'python', label: 'Python' },

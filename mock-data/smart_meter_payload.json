@@ -1,0 +1,23 @@
+{
+  "system_metadata": {
+    "provider": "VGE Technologies OÜ",
+    "commercial_register": "17556598",
+    "lei_code": "9845003828CB77B80280",
+    "protocol_version": "v1.4-mTLS",
+    "ingestion_region": "APAC-India-Gujarat"
+  },
+  "device_id": "VOLT-SMART-METER-IN-001",
+  "timestamp": "2026-07-31T09:00:00Z",
+  "energy_generated_kwh": 500,
+  "location": {
+    "lat": 21.1702,
+    "long": 72.8311,
+    "region": "Gujarat, India"
+  },
+  "status": "active",
+  "security_proof": {
+    "hmac_sha256": "4c9d81e0f272a81902b38f8762d103982e018a7c29d10e283b8a11029e01f284",
+    "dlt_telemetry_hash": "0x5e8f21a92d10283c4b120938472f102938471203984712039847120398471203",
+    "mtls_verified": true
+  }
+}

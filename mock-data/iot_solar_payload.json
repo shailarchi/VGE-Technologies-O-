@@ -1,0 +1,45 @@
+{
+  "system_metadata": {
+    "provider": "VGE Technologies OÜ",
+    "commercial_register": "17556598",
+    "lei_code": "9845003828CB77B80280",
+    "protocol_version": "v1.4-mTLS",
+    "ingestion_region": "EU-Central-Tallinn"
+  },
+  "asset_details": {
+    "facility_id": "FAC-MY-PENANG-004",
+    "facility_name": "Bayan Lepas Industrial Solar Park",
+    "country": "Malaysia",
+    "coordinates": {
+      "latitude": 5.2971,
+      "longitude": 100.2769
+    },
+    "peak_capacity_kwp": 1250.0,
+    "grid_connection": "Tenaga Nasional Berhad (TNB) 11kV Grid"
+  },
+  "inverter_telemetry": {
+    "inverter_id": "INV-SUNGROW-SG250-88A1",
+    "brand": "Sungrow",
+    "model": "SG250HX",
+    "firmware_version": "v3.2.1-vge",
+    "timestamp_utc": "2026-07-30T10:15:00Z",
+    "readings": {
+      "dc_voltage_v": 842.6,
+      "dc_current_a": 312.4,
+      "active_power_kw": 258.7,
+      "reactive_power_kvar": 12.1,
+      "grid_frequency_hz": 50.02,
+      "grid_phase_voltage_v": 415.8,
+      "power_factor": 0.992,
+      "daily_yield_kwh": 3840.5,
+      "cumulative_lifetime_yield_kwh": 142850.0,
+      "internal_temperature_c": 41.2,
+      "status_code": "NORMAL_GENERATION"
+    }
+  },
+  "security_proof": {
+    "hmac_sha256": "8a3f2e08b1c4996a17df392b4510b9918237e192a5d2047a0572e9140bc84d12",
+    "dlt_telemetry_hash": "0x3f7a9d2b184c810a99bc3a7281f629d012e845c0839a7b21495c612300fa1b98",
+    "mtls_verified": true
+  }
+}
