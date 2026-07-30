@@ -5,6 +5,7 @@ import { Hero } from './components/Hero';
 import { TrustedByEpcSection } from './components/TrustedByEpcSection';
 import { FeaturesSection } from './components/FeaturesSection';
 import { EnergyProductionAnalytics } from './components/EnergyProductionAnalytics';
+import { MarketDataSection } from './components/MarketDataSection';
 import { YieldCalculator } from './components/YieldCalculator';
 import { ApiPlayground } from './components/ApiPlayground';
 import { EsgStudio } from './components/EsgStudio';
@@ -71,6 +72,9 @@ export default function App() {
 
             {/* Real-time Energy Production & Historical Yield Analytics (Recharts) */}
             <EnergyProductionAnalytics />
+
+            {/* Live European & Asian I-REC Carbon Credit Market Data Section */}
+            <MarketDataSection />
 
             {/* Interactive B2B Solar Yield & Revenue Calculator */}
             <YieldCalculator />

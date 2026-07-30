@@ -78,6 +78,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection, onOpenDemo, o
               </li>
               <li>
                 <button 
+                  onClick={() => onNavigateSection('market-data')} 
+                  className="hover:text-[#4ADE80] hover:translate-x-1.5 transition-all duration-200 cursor-pointer flex items-center gap-2 group text-left"
+                >
+                  <ChevronRight className="w-3.5 h-3.5 text-[#16A34A] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                  <span>I-REC Market Data &amp; Spot Pricing</span>
+                </button>
+              </li>
+              <li>
+                <button 
                   onClick={() => onNavigateSection('esg-studio')} 
                   className="hover:text-[#4ADE80] hover:translate-x-1.5 transition-all duration-200 cursor-pointer flex items-center gap-2 group text-left"
                 >

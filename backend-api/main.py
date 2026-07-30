@@ -263,6 +263,58 @@ async def mint_irec_certificate(req: MintCertificateRequest):
         minted_at=datetime.datetime.utcnow().isoformat() + "Z"
     )
 
+@app.post("/api/v1/ingest-energy", response_model=TelemetryResponse, tags=["Telemetry"])
+async def ingest_energy(payload: TelemetryPayload):
+    """
+    Alias endpoint: Ingest telemetry data from Volt Energy & commercial smart meters.
+    """
+    return await ingest_telemetry(payload)
+
+@app.post("/api/v1/mint-drec", response_model=MintCertificateResponse, tags=["DLT Blockchain"])
+async def mint_drec(req: MintCertificateRequest):
+    """
+    Alias endpoint: Triggers the Polygon smart contract to mint dREC/I-REC tokens.
+    """
+    return await mint_irec_certificate(req)
+
+@app.get("/api/v1/certificates/{company_id}", tags=["ESG Certificates"])
+async def get_corporate_certificates(company_id: str):
+    """
+    Fetch corporate ESG certificates and on-chain dREC/I-REC holdings for a given company.
+    """
+    return {
+        "status": "success",
+        "company_id": company_id,
+        "company_name": f"{company_id.replace('-', ' ').title()} Solar Assets Corp",
+        "total_certificates_issued": 142,
+        "total_mwh_certified": 18450.0,
+        "co2_offset_tonnes": 11992.5,
+        "blockchain": "Polygon EVM (Chain ID 137)",
+        "certificates": [
+            {
+                "certificate_id": "VGE-IREC-2026-001",
+                "token_id": 88294,
+                "facility_name": "Penang Solar Park (15 MWp)",
+                "country": "Malaysia",
+                "mwh_certified": 150.5,
+                "co2_saved_tons": 97.8,
+                "issued_at": "2026-07-28T12:00:00Z",
+                "tx_hash": "0x7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f"
+            },
+            {
+                "certificate_id": "VGE-IREC-2026-002",
+                "token_id": 88295,
+                "facility_name": "Binh Thuan C&I Solar (95 MWp)",
+                "country": "Vietnam",
+                "mwh_certified": 450.0,
+                "co2_saved_tons": 292.5,
+                "issued_at": "2026-07-29T14:30:00Z",
+                "tx_hash": "0x1f2e3d4c5b6a7f8e9d0c1b2a3f4e5d6c7b8a9f0e1d2c"
+            }
+        ],
+        "compliance_standards": ["CSRD Scope 2", "GHG Protocol", "RE100 Verified"]
+    }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

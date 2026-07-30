@@ -67,6 +67,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#4ADE80] rounded-full group-hover:w-full transition-all duration-200"></span>
           </button>
           <button 
+            onClick={() => handleNavClick('market-data')} 
+            className="text-slate-300 hover:text-[#4ADE80] text-xs xl:text-sm font-semibold tracking-wide transition-all cursor-pointer py-2 relative group"
+          >
+            <span>Market Data</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#4ADE80] rounded-full group-hover:w-full transition-all duration-200"></span>
+          </button>
+          <button 
             onClick={() => handleNavClick('realtime-analytics')} 
             className="text-slate-300 hover:text-[#4ADE80] text-xs xl:text-sm font-semibold tracking-wide transition-all cursor-pointer py-2 relative group"
           >
@@ -244,6 +251,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="block w-full text-left py-2 text-[#94A3B8] hover:text-[#4ADE80] font-medium"
           >
             {t('solutions', 'Solutions')}
+          </button>
+          <button 
+            onClick={() => handleNavClick('market-data')} 
+            className="block w-full text-left py-2 text-[#94A3B8] hover:text-[#4ADE80] font-medium"
+          >
+            Market Data
           </button>
           <button 
             onClick={() => handleNavClick('calculator')} 
