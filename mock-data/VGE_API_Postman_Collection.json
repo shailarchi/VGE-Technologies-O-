@@ -1,0 +1,187 @@
+{
+  "info": {
+    "_postman_id": "vge-api-collection-2026",
+    "name": "Verde Grid Energy API Collection",
+    "description": "Postman Collection for VGE Technologies OÜ Enterprise API - IoT Telemetry Ingestion, PPA Yield Analytics, and Polygon DLT I-REC Tokenization.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "API Health Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "health"]
+            },
+            "description": "Verify system status, API version, registry info, and timestamp."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Get Live Yield Metrics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/yield/live",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "yield", "live"]
+            },
+            "description": "Fetch dynamic real-time cumulative yield metrics across APAC enterprise solar assets."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Production Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analytics/production?facility_id=FAC-MY-PENANG-004&timeframe=24h",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "analytics", "production"],
+              "query": [
+                {
+                  "key": "facility_id",
+                  "value": "FAC-MY-PENANG-004",
+                  "description": "Facility ID (e.g. FAC-MY-PENANG-004, vge-vnm-05, FAC-TH-CHONBURI-012)"
+                },
+                {
+                  "key": "timeframe",
+                  "value": "24h",
+                  "description": "Analytics timeframe window (24h, 7d, 30d)"
+                }
+              ]
+            },
+            "description": "Fetch historical generation curves, active power telemetry, and PPA revenue streams."
+          },
+          "response": []
+        },
+        {
+          "name": "Calculate PPA Yield",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"capacity_kwp\": 1000.0,\n  \"grid_tariff_usd_kwh\": 0.12,\n  \"ppa_discount_percent\": 20.0,\n  \"annual_sun_hours\": 1450.0,\n  \"degradation_rate_percent\": 0.5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/yield/calculate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "yield", "calculate"]
+            },
+            "description": "Calculate 20-year commercial B2B solar PPA yields, tariff savings, and I-REC market values."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Telemetry",
+      "item": [
+        {
+          "name": "Ingest Inverter Telemetry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device_id\": \"INV-SUNGROW-SG250-88A1\",\n  \"facility_id\": \"FAC-MY-PENANG-004\",\n  \"timestamp\": \"2026-07-30T10:00:00Z\",\n  \"active_power_kw\": 245.8,\n  \"cumulative_yield_kwh\": 124850.5,\n  \"grid_voltage_v\": 415.2,\n  \"frequency_hz\": 50.01,\n  \"grid_power_factor\": 0.99,\n  \"temperature_celsius\": 42.5,\n  \"signature\": \"a8fbc892d28174e198b10f0011928374\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/telemetry/ingest",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "telemetry", "ingest"]
+            },
+            "description": "Ingest real-time IoT telemetry from commercial solar inverters and generate cryptographic hashes."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "DLT Blockchain",
+      "item": [
+        {
+          "name": "Mint I-REC Certificate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"facility_id\": \"FAC-MY-PENANG-004\",\n  \"mwh_generated\": 150.5,\n  \"period_start\": \"2026-07-01T00:00:00Z\",\n  \"period_end\": \"2026-07-30T00:00:00Z\",\n  \"recipient_wallet\": \"0x71C7656EC7ab88b098defB751B7401B5f6d8976F\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/irec/mint",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "irec", "mint"]
+            },
+            "description": "Mint on-chain I-REC Renewable Energy Certificates on Polygon EVM DLT."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

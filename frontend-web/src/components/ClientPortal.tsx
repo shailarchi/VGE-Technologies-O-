@@ -1,17 +1,65 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend 
 } from 'recharts';
 import { 
-  Sun, Activity, Cpu, DollarSign, Leaf, RefreshCw, AlertTriangle, ShieldCheck, Zap, Download, Radio, Filter, Building2, SlidersHorizontal, CheckCircle2, ArrowRight
+  Sun, Activity, Cpu, DollarSign, Leaf, RefreshCw, AlertTriangle, ShieldCheck, Zap, Download, Radio, Filter, Building2, SlidersHorizontal, CheckCircle2, ArrowRight, Bell, ShieldAlert, Sparkles, X
 } from 'lucide-react';
 import { INITIAL_PLANTS, HOURLY_GENERATION_DATA, SAMPLE_INVERTERS, ACTIVE_PPA_CONTRACTS } from '../data/mockData';
 import { SolarPlant, InverterTelemetry } from '../types';
 import { VerdeGridLogo } from './VerdeGridLogo';
+import { ToastContainer, AssetAlertToast } from './ToastContainer';
+import { InverterConnectionSection } from './InverterConnectionSection';
 
 interface ClientPortalProps {
   onExitPortal: () => void;
 }
+
+const SIMULATED_ALERTS_POOL: Omit<AssetAlertToast, 'id' | 'timestamp'>[] = [
+  {
+    assetId: 'FAC-MY-PENANG-004',
+    assetName: 'Penang Solar Park (15 MWp)',
+    type: 'production_drop',
+    dropPercentage: 34,
+    title: 'Sudden Generation Drop (-34%)',
+    message: 'Solar array telemetry recorded a 34% output drop within 2 minutes due to severe localized cloud cover & string fault.',
+  },
+  {
+    assetId: 'vge-est-01',
+    assetName: 'Tallinn Park I (42 MWp)',
+    inverterId: 'INV-TAL-003',
+    type: 'critical_error',
+    errorCode: 'ERR_OVERHEAT_508',
+    title: 'Inverter Overheat Error (58.4°C)',
+    message: 'Thermal sensor triggered automatic power throttling. Internal heat sink threshold surpassed nominal 55.0°C.',
+  },
+  {
+    assetId: 'vge-vnm-05',
+    assetName: 'Binh Thuan C&I Solar (95 MWp)',
+    inverterId: 'INV-VNM-006',
+    type: 'critical_error',
+    errorCode: 'ERR_GRID_FREQ_BOUNDS',
+    title: 'Grid Sync Disconnect Code 409',
+    message: 'Inverter #INV-VNM-006 disconnected from utility grid due to frequency instability (50.84 Hz).',
+  },
+  {
+    assetId: 'vge-esp-02',
+    assetName: 'Valladolid Solar Array (28 MWp)',
+    inverterId: 'INV-ESP-009',
+    type: 'warning',
+    errorCode: 'ERR_COMM_TIMEOUT_104',
+    title: 'Huawei SmartLogger Timeout',
+    message: 'MQTT gateway lost telemetry packet ACK for 45s. Automatic retry initiated on fallback channel.',
+  },
+  {
+    assetId: 'vge-est-01',
+    assetName: 'Tallinn Park I (42 MWp)',
+    type: 'production_drop',
+    dropPercentage: 28,
+    title: 'Power Curve Deviation (-28%)',
+    message: 'Active power output dropped from 38.2 MW to 27.5 MW relative to clear-sky forecast benchmark.',
+  }
+];
 
 export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal }) => {
   const [selectedPlantId, setSelectedPlantId] = useState<string>('vge-est-01');
@@ -21,11 +69,79 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal }) => {
   const [lastUpdatedSecs, setLastUpdatedSecs] = useState<number>(0);
   const [isSimulatingStream, setIsSimulatingStream] = useState<boolean>(true);
 
+  // Toast System State
+  const [toasts, setToasts] = useState<AssetAlertToast[]>([
+    {
+      id: 'toast-init-1',
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      assetId: 'vge-est-01',
+      assetName: 'Tallinn Park I (42 MWp)',
+      inverterId: 'INV-TAL-003',
+      type: 'critical_error',
+      errorCode: 'ERR_OVERHEAT_508',
+      title: 'Inverter Thermal Warning (58.4°C)',
+      message: 'Inverter #INV-TAL-003 active thermal throttling engaged. Operating at 85% reduced capacity.',
+    },
+    {
+      id: 'toast-init-2',
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      assetId: 'FAC-MY-PENANG-004',
+      assetName: 'Penang Solar Park (15 MWp)',
+      type: 'production_drop',
+      dropPercentage: 32,
+      title: 'Generation Drop Detected (-32%)',
+      message: 'SCADA detected a sudden power drop from 14.2 MW to 9.6 MW on Block B strings.',
+    }
+  ]);
+
+  const [alertDrawerOpen, setAlertDrawerOpen] = useState<boolean>(false);
+  const [alertHistory, setAlertHistory] = useState<AssetAlertToast[]>(toasts);
+
   const currentPlant = INITIAL_PLANTS.find(p => p.id === selectedPlantId) || INITIAL_PLANTS[0];
 
-  // Live simulation tick
+  // Dismiss single toast
+  const handleDismissToast = (id: string) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  };
+
+  // Clear all toasts
+  const handleClearAllToasts = () => {
+    setToasts([]);
+  };
+
+  // Inspect asset from toast
+  const handleInspectAsset = (assetId: string, inverterId?: string) => {
+    const matchingPlant = INITIAL_PLANTS.find(p => p.id === assetId);
+    if (matchingPlant) {
+      setSelectedPlantId(assetId);
+      setLiveGeneration(matchingPlant.currentPowerMW);
+    }
+    if (inverterId) {
+      setActiveTab('inverters');
+      setInverterFilter('overheat');
+    } else {
+      setActiveTab('overview');
+    }
+  };
+
+  // Trigger a manual or dynamic toast alert
+  const triggerNewAssetAlert = useCallback(() => {
+    const randomTemplate = SIMULATED_ALERTS_POOL[Math.floor(Math.random() * SIMULATED_ALERTS_POOL.length)];
+    const newAlert: AssetAlertToast = {
+      ...randomTemplate,
+      id: `toast-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    };
+
+    setToasts(prev => [newAlert, ...prev.slice(0, 4)]);
+    setAlertHistory(prev => [newAlert, ...prev]);
+  }, []);
+
+  // Live simulation tick & periodic alert simulation
   useEffect(() => {
     let interval: any;
+    let alertInterval: any;
+
     if (isSimulatingStream) {
       interval = setInterval(() => {
         setLastUpdatedSecs(prev => (prev > 10 ? 0 : prev + 1));
@@ -33,9 +149,19 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal }) => {
         const delta = (Math.random() - 0.48) * 0.4;
         setLiveGeneration(prev => Math.max(0, Math.min(currentPlant.capacityMWp, +(prev + delta).toFixed(2))));
       }, 2000);
+
+      // Periodically trigger a random alert every 18 seconds to simulate real-time SCADA monitor
+      alertInterval = setInterval(() => {
+        if (Math.random() > 0.3) {
+          triggerNewAssetAlert();
+        }
+      }, 18000);
     }
-    return () => clearInterval(interval);
-  }, [isSimulatingStream, currentPlant.capacityMWp]);
+    return () => {
+      clearInterval(interval);
+      clearInterval(alertInterval);
+    };
+  }, [isSimulatingStream, currentPlant.capacityMWp, triggerNewAssetAlert]);
 
   const filteredInverters = SAMPLE_INVERTERS.filter(inv => {
     if (inverterFilter === 'all') return true;
@@ -43,8 +169,16 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal }) => {
   });
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-white pt-8 pb-16 px-4 sm:px-6 lg:px-8 font-body">
+    <div className="min-h-screen bg-[#0F172A] text-white pt-8 pb-16 px-4 sm:px-6 lg:px-8 font-body relative">
       
+      {/* Floating Toast Notification Container */}
+      <ToastContainer
+        toasts={toasts}
+        onDismiss={handleDismissToast}
+        onClearAll={handleClearAllToasts}
+        onInspectAsset={handleInspectAsset}
+      />
+
       {/* Top Portal Banner */}
       <div className="max-w-7xl mx-auto">
         <div className="bg-[#1E293B] border border-[#16A34A]/40 rounded-2xl p-6 mb-8 shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -68,9 +202,35 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal }) => {
             </div>
           </div>
 
-          {/* Plant Selector Dropdown */}
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2 bg-[#0F172A] p-1.5 rounded-xl border border-white/10">
+          {/* Plant Selector & Alert Simulation Controls */}
+          <div className="flex flex-wrap items-center gap-3">
+            
+            {/* Simulate Asset Alert Button */}
+            <button
+              onClick={triggerNewAssetAlert}
+              className="bg-[#16A34A]/15 hover:bg-[#16A34A]/25 border border-[#16A34A]/40 text-[#4ADE80] px-3.5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-2 shadow-md hover:shadow-[#16A34A]/20 cursor-pointer"
+              title="Simulate a real-time asset production drop or error code alert"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[#4ADE80] animate-spin" />
+              <span>Simulate Asset Alert</span>
+            </button>
+
+            {/* Notification History Bell Toggle */}
+            <button
+              onClick={() => setAlertDrawerOpen(!alertDrawerOpen)}
+              className="relative bg-[#0F172A] hover:bg-[#334155] text-slate-300 p-2.5 rounded-xl border border-white/10 text-xs font-mono transition-all cursor-pointer"
+              title="View System Alerts History"
+            >
+              <Bell className="w-4 h-4 text-amber-400" />
+              {alertHistory.length > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white font-mono font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#0F172A]">
+                  {alertHistory.length}
+                </span>
+              )}
+            </button>
+
+            {/* Plant Selector Dropdown */}
+            <div className="flex items-center gap-2 bg-[#0F172A] p-1 rounded-xl border border-white/10">
               <Building2 className="w-4 h-4 text-[#4ADE80] ml-2" />
               <select
                 value={selectedPlantId}
@@ -99,55 +259,66 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal }) => {
 
         </div>
 
-        {/* Zero-Hardware Integration Highlight Banner */}
-        <div className="bg-gradient-to-r from-[#1E293B] via-[#0F172A] to-[#162132] border border-[#16A34A]/50 rounded-2xl p-6 mb-8 shadow-xl relative overflow-hidden backdrop-blur-md group">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-[#16A34A]/10 rounded-full blur-3xl pointer-events-none group-hover:bg-[#16A34A]/15 transition-all" />
-          
-          <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-            <div className="space-y-2 max-w-4xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#16A34A]/15 border border-[#16A34A]/30 text-[#4ADE80] text-xs font-mono font-bold uppercase tracking-wider">
-                <Zap className="w-3.5 h-3.5 text-[#4ADE80] animate-pulse" />
-                Zero-Hardware Integration
+        {/* Alert History Drawer Overlay */}
+        {alertDrawerOpen && (
+          <div className="bg-[#1E293B] border border-amber-500/40 rounded-2xl p-5 mb-8 shadow-2xl relative">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+              <div className="flex items-center gap-2 text-sm font-bold text-white font-mono">
+                <ShieldAlert className="w-4 h-4 text-amber-400" />
+                <span>Solar Asset Alerts Log ({alertHistory.length} Recorded)</span>
               </div>
-              
-              <h2 className="font-heading text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-                Zero-Hardware Integration
-              </h2>
-
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-body">
-                “Connect your existing solar portfolio in 60 seconds. Our API integrates directly with major inverters (Growatt, Huawei) to instantly begin minting I-REC carbon credits without deploying physical hardware or disrupting your current operations.”
-              </p>
-
-              <div className="flex flex-wrap items-center gap-3 pt-2 text-xs font-mono text-slate-400">
-                <span className="flex items-center gap-1.5 bg-slate-900/60 px-2.5 py-1 rounded-md border border-white/5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#4ADE80]" />
-                  Growatt & Huawei Direct API
-                </span>
-                <span className="flex items-center gap-1.5 bg-slate-900/60 px-2.5 py-1 rounded-md border border-white/5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#4ADE80]" />
-                  Instant I-REC Carbon Minting
-                </span>
-                <span className="flex items-center gap-1.5 bg-slate-900/60 px-2.5 py-1 rounded-md border border-white/5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#4ADE80]" />
-                  60-Second Onboarding
-                </span>
-              </div>
-            </div>
-
-            <div className="shrink-0 w-full lg:w-auto">
-              <button 
-                onClick={() => {
-                  const el = document.getElementById('api-playground');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="w-full lg:w-auto bg-[#16A34A] hover:bg-[#15803D] text-white font-heading font-bold text-xs px-5 py-3 rounded-xl transition-all shadow-lg shadow-[#16A34A]/20 flex items-center justify-center gap-2 group cursor-pointer"
+              <button
+                onClick={() => setAlertDrawerOpen(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 cursor-pointer"
               >
-                Connect Inverters via API
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                <X className="w-4 h-4" />
               </button>
             </div>
+
+            <div className="space-y-2 max-h-60 overflow-y-auto pr-1 font-mono text-xs">
+              {alertHistory.length === 0 ? (
+                <p className="text-slate-400 text-center py-4">No system alerts recorded yet.</p>
+              ) : (
+                alertHistory.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3 rounded-xl bg-[#0F172A] border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:border-amber-500/30 transition-colors"
+                  >
+                    <div className="space-y-0.5">
+                      <div className="flex items-center gap-2">
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                          item.type === 'critical_error'
+                            ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                            : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                        }`}>
+                          {item.errorCode || `Drop -${item.dropPercentage}%`}
+                        </span>
+                        <span className="font-bold text-white">{item.title}</span>
+                      </div>
+                      <p className="text-slate-400 text-[11px]">{item.message}</p>
+                      <p className="text-[10px] text-slate-500">
+                        Asset: {item.assetName} • Time: {item.timestamp}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        handleInspectAsset(item.assetId, item.inverterId);
+                        setAlertDrawerOpen(false);
+                      }}
+                      className="bg-[#16A34A]/20 text-[#4ADE80] hover:bg-[#16A34A] hover:text-white px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all shrink-0 cursor-pointer text-center"
+                    >
+                      Inspect Asset
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Zero-Hardware Integration Section with Working API Connection Wizard & FAQs */}
+        <InverterConnectionSection />
 
         {/* Real-time KPI Stats Bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
