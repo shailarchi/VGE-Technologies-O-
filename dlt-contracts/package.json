@@ -1,0 +1,27 @@
+{
+  "name": "vge-dlt-contracts",
+  "version": "1.0.0",
+  "description": "Verde Renewable Energy Certificate Smart Contracts on Polygon/EVM DLT",
+  "main": "hardhat.config.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:amoy": "hardhat run scripts/deploy.js --network amoy",
+    "deploy:polygon": "hardhat run scripts/deploy.js --network polygon"
+  },
+  "keywords": [
+    "solidity",
+    "hardhat",
+    "i-rec",
+    "polygon",
+    "dlt",
+    "esg",
+    "clean-energy"
+  ],
+  "author": "VGE Technologies OÜ",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.0"
+  }
+}

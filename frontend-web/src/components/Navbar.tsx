@@ -67,6 +67,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#4ADE80] rounded-full group-hover:w-full transition-all duration-200"></span>
           </button>
           <button 
+            onClick={() => handleNavClick('realtime-analytics')} 
+            className="text-slate-300 hover:text-[#4ADE80] text-xs xl:text-sm font-semibold tracking-wide transition-all cursor-pointer py-2 relative group"
+          >
+            <span>Real-time Analytics</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#4ADE80] rounded-full group-hover:w-full transition-all duration-200"></span>
+          </button>
+          <button 
             onClick={() => handleNavClick('calculator')} 
             className="text-slate-300 hover:text-[#4ADE80] text-xs xl:text-sm font-semibold tracking-wide transition-all cursor-pointer py-2 relative group"
           >

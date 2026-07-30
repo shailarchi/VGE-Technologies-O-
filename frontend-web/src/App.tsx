@@ -4,6 +4,7 @@ import { LiveNetworkBanner } from './components/LiveNetworkBanner';
 import { Hero } from './components/Hero';
 import { TrustedByEpcSection } from './components/TrustedByEpcSection';
 import { FeaturesSection } from './components/FeaturesSection';
+import { EnergyProductionAnalytics } from './components/EnergyProductionAnalytics';
 import { YieldCalculator } from './components/YieldCalculator';
 import { ApiPlayground } from './components/ApiPlayground';
 import { EsgStudio } from './components/EsgStudio';
@@ -68,6 +69,9 @@ export default function App() {
               onOpenDemo={() => setIsDemoModalOpen(true)}
             />
 
+            {/* Real-time Energy Production & Historical Yield Analytics (Recharts) */}
+            <EnergyProductionAnalytics />
+
             {/* Interactive B2B Solar Yield & Revenue Calculator */}
             <YieldCalculator />
 
@@ -105,3 +109,4 @@ export default function App() {
     </div>
   );
 }
+
