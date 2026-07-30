@@ -7,11 +7,12 @@
 
 ---
 
-## 📌 Postman Collection
-A pre-configured Postman collection file is available in the repository at:  
-📁 `/mock-data/VGE_API_Postman_Collection.json`
+## 📌 Postman Collection & Database Architecture
+* **Postman Collection**: 📁 `/mock-data/VGE_API_Postman_Collection.json`
+* **PostgreSQL ORM Models (SQLAlchemy)**: 📁 `/backend-api/models.py`
+* **PostgreSQL DDL Schema Script**: 📁 `/backend-api/schema.sql`
 
-Import this file into Postman to test all endpoints with pre-populated headers, JSON request bodies, and query parameters.
+Import the Postman collection file to test all endpoints. Database tables are defined for `companies`, `users`, `solar_facilities`, `inverter_telemetry`, `irec_certificates`, and `ppa_contracts`.
 
 ---
 
@@ -79,6 +80,23 @@ Triggers Polygon EVM smart contract execution to mint verified I-REC Renewable E
   "mwh_tokenized": 150.5,
   "status": "MINTED_ON_CHAIN",
   "minted_at": "2026-07-30T10:01:15.912Z"
+}
+```
+
+---
+
+### 3. Smart Contract ABI (VerdeCertificate.sol)
+Retrieves the complete JSON Application Binary Interface (ABI) for `VerdeCertificate.sol` (ERC-1155 I-REC Carbon Credit token contract).
+
+* **Endpoint:** `GET /api/v1/contract/abi`
+* **ABI File Location:** `backend-api/VerdeCertificate_ABI.json`
+* **Response Example (200 OK):**
+```json
+{
+  "status": "success",
+  "contract_name": "VerdeCertificate",
+  "standard": "ERC-1155 / I-REC Token",
+  "abi": [ ... ]
 }
 ```
 

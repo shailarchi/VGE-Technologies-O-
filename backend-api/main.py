@@ -10,9 +10,18 @@ from fastapi import FastAPI, HTTPException, Header, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import List, Optional
+import json
+import os
 import datetime
 import hashlib
 import hmac
+
+# Load VerdeCertificate Smart Contract ABI
+ABI_FILE_PATH = os.path.join(os.path.dirname(__file__), "VerdeCertificate_ABI.json")
+VERDE_CERTIFICATE_ABI = []
+if os.path.exists(ABI_FILE_PATH):
+    with open(ABI_FILE_PATH, "r", encoding="utf-8") as f:
+        VERDE_CERTIFICATE_ABI = json.load(f)
 
 app = FastAPI(
     title="Verde Grid Energy API",
@@ -313,6 +322,18 @@ async def get_corporate_certificates(company_id: str):
             }
         ],
         "compliance_standards": ["CSRD Scope 2", "GHG Protocol", "RE100 Verified"]
+    }
+
+@app.get("/api/v1/contract/abi", tags=["DLT Blockchain"])
+async def get_contract_abi():
+    """
+    Returns the Application Binary Interface (ABI) for VerdeCertificate.sol smart contract.
+    """
+    return {
+        "status": "success",
+        "contract_name": "VerdeCertificate",
+        "standard": "ERC-1155 / I-REC Token",
+        "abi": VERDE_CERTIFICATE_ABI
     }
 
 if __name__ == "__main__":
