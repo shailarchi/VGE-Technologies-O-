@@ -2,6 +2,6 @@
   "name": "vge-technologies",
   "compatibility_date": "2026-07-30",
   "assets": {
-    "directory": "./frontend-web/dist"
+    "directory": "./dist"
   }
 }
