@@ -29,7 +29,7 @@ export const INITIAL_PLANTS: SolarPlant[] = [
     status: 'optimal',
     invertersCount: 320,
     co2SavedTodayTonnes: 427.1,
-    ppaOfftaker: 'Vinamilk / Web3 Carbon Yield Pool',
+    ppaOfftaker: 'Vinamilk / ESG Carbon Offset Pool',
     ppaRateEURMWh: 68.5,
     coordinates: { lat: 10.9289, lng: 108.1021 }
   },
@@ -45,7 +45,7 @@ export const INITIAL_PLANTS: SolarPlant[] = [
     status: 'optimal',
     invertersCount: 450,
     co2SavedTodayTonnes: 623.0,
-    ppaOfftaker: 'WHA Utilities / Global Web3 Vault',
+    ppaOfftaker: 'WHA Utilities / Global ESG Vault',
     ppaRateEURMWh: 72.0,
     coordinates: { lat: 13.3611, lng: 100.9847 }
   },

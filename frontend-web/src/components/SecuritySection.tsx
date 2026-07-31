@@ -15,7 +15,7 @@ export const SecuritySection: React.FC = () => {
             Built Under Estonian IT & EU NIS2 Frameworks
           </h2>
           <p className="text-[#94A3B8] text-base">
-            VGE Technologies is the end-to-end operating system bridging Asian commercial solar assets with global Web3 capital under strict EU NIS2, Estonian corporate law, and cryptographic smart contract audit standards.
+            VGE Technologies is the enterprise-grade operating system bridging Asian commercial solar assets with global ESG markets. We operate under strict EU NIS2 cybersecurity frameworks, Estonian corporate law, and immutable DLT (Distributed Ledger Technology) audit standards.
           </p>
         </div>
 

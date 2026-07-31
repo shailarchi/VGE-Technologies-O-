@@ -16,11 +16,11 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ onNavigateSect
       moduleNumber: 'Module 1',
       title: 'Digital Underwriting',
       targetAudience: 'For raising capital for new projects',
-      shortDesc: 'Automate risk modeling, cashflow verification, and debt origination for Asian C&I solar projects. Connect directly with global Web3 capital pools to accelerate project financing.',
+      shortDesc: 'Automate risk modeling, cashflow verification, and debt origination for Asian C&I solar projects. Connect directly with global institutional capital pools to accelerate project financing.',
       badge: 'Capital Origination',
       details: [
         'Instant algorithmic risk scoring for C&I rooftop and ground-mounted Asian solar assets',
-        'Direct smart-contract liquidity pool onboarding for institutional Web3 debt investors',
+        'Direct automated onboarding for institutional infrastructure financiers',
         'Automated multi-currency PPA cashflow settlement with real-time on-chain auditing',
         'Cross-border SPV legal structure templates bridging Estonia (EU) with APAC jurisdictions'
       ],
@@ -48,7 +48,7 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ onNavigateSect
       moduleNumber: 'Module 3',
       title: 'Carbon Yield Optimization',
       targetAudience: 'The automated minting and selling of I-RECs',
-      shortDesc: 'Automatically convert verified kilowatt-hours into I-RECs and tokenized carbon credit yields. Direct on-chain minting and secondary market settlement unlock recurring revenues.',
+      shortDesc: 'Automatically convert verified kilowatt-hours into I-RECs and digitized carbon credit origination. Direct on-chain minting and secondary market settlement unlock recurring revenues.',
       badge: 'Automated I-REC Minting',
       details: [
         'Automated digital Monitoring, Reporting & Verification (dMRV) with zero manual paperwork',

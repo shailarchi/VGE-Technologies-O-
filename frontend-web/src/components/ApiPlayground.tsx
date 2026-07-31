@@ -16,39 +16,39 @@ const vge = new VGEClient({
   entityId: 'EE-17556598'
 });
 
-// Digital Underwriting & Web3 Carbon Yield Oracle
+// Digital Underwriting & ESG Carbon Revenue Oracle
 const underwriting = await vge.underwriting.evaluateAsset({
   plantId: 'vge-vnm-05', // Binh Thuan C&I Solar Rooftop (Vietnam)
   capacityMWp: 95.0,
-  web3CapitalVaultId: '0x9a8f7c6e5d4b3a21'
+  esgAssetWalletId: '0x9a8f7c6e5d4b3a21'
 });
 
-console.log(\`Underwriting Score: \${underwriting.riskGrade}, Web3 Carbon Yield: \${underwriting.monthlyCarbonYieldEUR} EUR\`);`,
+console.log(\`Underwriting Score: \${underwriting.riskGrade}, Carbon Offset Revenue: \${underwriting.monthlyCarbonYieldEUR} EUR\`);`,
 
     curl: `curl -X POST "https://api.vge.ee/v1/underwriting/evaluate" \\
   -H "Authorization: Bearer vge_live_8817556598_key" \\
   -H "Content-Type: application/json" \\
-  -d '{"plant_id": "vge-vnm-05", "web3_capital_vault": "0x9a8f7c6e5d4b3a21"}'`,
+  -d '{"plant_id": "vge-vnm-05", "esg_asset_wallet": "0x9a8f7c6e5d4b3a21"}'`,
 
     python: `import requests
 
 url = "https://api.vge.ee/v1/underwriting/evaluate"
 headers = {"Authorization": "Bearer vge_live_8817556598_key"}
 
-payload = {"plant_id": "vge-vnm-05", "target_yield_type": "WEB3_CARBON_CREDIT"}
+payload = {"plant_id": "vge-vnm-05", "target_revenue_type": "ESG_CARBON_CREDIT"}
 response = requests.post(url, json=payload, headers=headers)
 data = response.json()
-print(f"Asset: {data['asset_name']}, Web3 APY Yield: {data['web3_capital_apy_pct']}%")`,
+print(f"Asset: {data['asset_name']}, ESG APY Return: {data['esg_capital_apy_pct']}%")`,
 
     mqtt: `// MQTT Ingress Topic: vge/apac/vietnam/plant-05/telemetry
-// QoS: 1 (At Least Once), Web3 On-Chain Telemetry Buffer
+// QoS: 1 (At Least Once), On-Chain Telemetry Buffer
 {
   "device_id": "INV-VNM-320",
   "plant_id": "vge-vnm-05",
   "ac_power_kw": 81400,
   "daily_yield_mwh": 610.2,
   "dmrv_carbon_minted_tonnes": 427.1,
-  "web3_vault_signature": "0x7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c"
+  "esg_vault_signature": "0x7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c"
 }`,
 
     smart_meter: `// Ingress Payload: VOLT Smart Meter (Gujarat, India)
@@ -112,7 +112,7 @@ print(f"Asset: {data['asset_name']}, Web3 APY Yield: {data['web3_capital_apy_pct
           active_power_mw: 81.4,
           daily_yield_mwh: 610.2,
           iot_inverters_online: "320 / 320",
-          web3_capital_liquidity_pool: "0x9a8f7c6e5d4b3a21",
+          institutional_capital_pool: "0x9a8f7c6e5d4b3a21",
           automated_carbon_credit_yield_tonnes: 427.1,
           dmrv_onchain_signature: "0x7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c"
         }

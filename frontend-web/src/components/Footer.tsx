@@ -27,7 +27,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection, onOpenDemo, o
             </div>
 
             <p className="text-slate-400 text-xs leading-relaxed font-body pt-1">
-              Verde Grid Energy is the Web3 Capital & IoT Operating System bridging Asian commercial solar assets with institutional liquidity, zero-hardware telemetry, and automated I-REC carbon yields.
+              Verde Grid Energy is the ESG Markets & IoT Operating System bridging Asian commercial solar assets with institutional liquidity, zero-hardware telemetry, and automated I-REC carbon yields.
             </p>
 
             {/* Certifications & Badges */}

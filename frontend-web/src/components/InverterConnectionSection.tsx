@@ -42,7 +42,7 @@ const FAQ_LIST: FAQItem[] = [
   {
     category: 'I-REC Carbon Credits',
     question: 'How quickly do I-REC carbon credits mint once connected?',
-    answer: 'Telemetry packets are processed in 60-second real-time cycles. Once dMRV verification rules confirm baseline production hash, digital I-REC tokens are minted directly on Polygon EVM and deposited into your organization’s Web3 wallet within minutes.'
+    answer: 'Telemetry packets are processed in 60-second real-time cycles. Once dMRV verification rules confirm baseline production hash, digital I-REC tokens are minted directly on Polygon EVM and deposited into your organization’s ESG asset wallet within minutes.'
   },
   {
     category: 'Reliability',

@@ -33,13 +33,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenDemo, onOpenDashboard, onNavig
         <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-[1.15]">
           Bridging Asian Commercial Solar Assets with <br className="hidden sm:inline" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4ADE80] to-[#22C55E]">
-            Global Web3 Capital
+            Global ESG Markets
           </span>
         </h1>
 
         {/* Subtitle */}
         <p className="text-slate-300 text-lg sm:text-xl max-w-3xl mx-auto mb-10 font-normal leading-relaxed">
-          VGE Technologies is the end-to-end operating system bridging Asian commercial solar assets with global Web3 capital. We automate the entire value chain: from digital underwriting, to IoT asset optimization, to automated carbon credit yields.
+          VGE Technologies is the end-to-end operating system bridging Asian commercial solar assets with global ESG markets. We automate the entire value chain: from digital underwriting, to IoT asset optimization, to automated carbon credit yields.
         </p>
 
         {/* Primary Action Buttons */}

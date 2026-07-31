@@ -167,7 +167,7 @@ export const EsgStudio: React.FC = () => {
             </h2>
           </div>
           <p className="text-slate-400 text-sm max-w-md">
-            Convert Asian commercial solar IoT telemetry into verifiable disclosures and tokenized carbon credit yields aligned with EU CSRD, Verra dMRV, and Web3 capital standards.
+            Convert Asian commercial solar IoT telemetry into verifiable disclosures and digitized carbon credit origination aligned with EU CSRD, Verra dMRV, and institutional ESG capital standards.
           </p>
         </div>
 

@@ -162,9 +162,15 @@ export const TrustedByEpcSection: React.FC = () => {
         
         {/* Banner Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#16A34A]/15 border border-[#16A34A]/40 text-[#4ADE80] font-mono text-xs font-bold uppercase tracking-wider mb-4 shadow-sm">
-            <Building2 className="w-3.5 h-3.5" />
-            Infrastructure Partnerships
+          <div className="flex flex-wrap items-center justify-center gap-2.5 mb-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#16A34A]/15 border border-[#16A34A]/40 text-[#4ADE80] font-mono text-xs font-bold uppercase tracking-wider shadow-sm">
+              <Building2 className="w-3.5 h-3.5" />
+              Infrastructure Partnerships
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-amber-400/90 font-mono text-xs font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+              Demo Data / Representative Partners
+            </div>
           </div>
           
           <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
@@ -173,6 +179,9 @@ export const TrustedByEpcSection: React.FC = () => {
 
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-body">
             {t('epcTagline', 'Verde Grid Energy partners with India and Asia’s premier clean infrastructure developers to automate digital underwriting, zero-hardware inverter telemetry, and instant I-REC carbon credit minting across')} <span className="text-[#4ADE80] font-semibold font-mono">4,750+ MWp</span> of commercial solar assets.
+          </p>
+          <p className="mt-2 text-slate-400/80 text-xs font-mono">
+            * Demo Data / Representative Partners
           </p>
         </div>
 
@@ -230,7 +239,7 @@ export const TrustedByEpcSection: React.FC = () => {
             <span>Growatt, Huawei, Sungrow Native API Compatibility</span>
           </div>
           <div className="flex items-center gap-2 text-[#4ADE80] font-bold">
-            <span>Automated I-REC & Web3 Yields</span>
+            <span>Automated I-REC & Carbon Offset Revenues</span>
           </div>
         </div>
 

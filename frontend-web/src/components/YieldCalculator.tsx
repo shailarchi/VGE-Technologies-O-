@@ -18,7 +18,7 @@ export const YieldCalculator: React.FC = () => {
   };
 
   const selectedMultiplier = yieldMultipliers[region];
-  const bessBoost = hasBess ? 1.15 : 1.0; // 15% revenue boost from peak shaving & Web3 yield arbitrage
+  const bessBoost = hasBess ? 1.15 : 1.0; // 15% revenue boost from peak shaving & carbon offset revenue arbitrage
 
   // Conversion rates baseline from EUR (€)
   // 1 EUR = 1.08 USD, 1 EUR = 97.20 INR (1 USD ≈ 90 INR)
@@ -51,7 +51,7 @@ export const YieldCalculator: React.FC = () => {
   const annualYieldMWh = Math.round(capacityMW * 1000 * (selectedMultiplier / 1000));
   const annualRevenueEUR = Math.round(annualYieldMWh * ppaRate * bessBoost);
   const annualCo2AvoidedTonnes = Math.round(annualYieldMWh * 0.76); // ~0.76t CO2 per MWh in APAC
-  const tokenizedCarbonYieldEUR = Math.round(annualCo2AvoidedTonnes * 24); // €24/tonne Web3 carbon yield
+  const tokenizedCarbonYieldEUR = Math.round(annualCo2AvoidedTonnes * 24); // €24/tonne carbon offset revenue
   const totalCombinedYieldEUR = annualRevenueEUR + tokenizedCarbonYieldEUR;
   const homesPowered = Math.round(annualYieldMWh / 3.8);
 
@@ -115,7 +115,7 @@ export const YieldCalculator: React.FC = () => {
               Digital Underwriting & Yield Engine
             </div>
             <h2 className="font-heading text-3xl sm:text-4xl font-bold text-white tracking-tight">
-              Asian Solar Portfolio & Web3 Yield Modeling
+              Asian Solar Portfolio & Carbon Revenue Modeling
             </h2>
           </div>
 
@@ -238,7 +238,7 @@ export const YieldCalculator: React.FC = () => {
                 <Zap className={`w-5 h-5 ${hasBess ? 'text-[#4ADE80]' : 'text-[#94A3B8]'}`} />
                 <div>
                   <div className="text-sm font-medium text-white">Integrate BESS Battery Storage</div>
-                  <div className="text-xs text-[#94A3B8]">Adds +15% revenue via peak arbitrage & Web3 yield</div>
+                  <div className="text-xs text-[#94A3B8]">Adds +15% revenue via peak arbitrage & carbon offset revenues</div>
                 </div>
               </div>
               <button
@@ -308,7 +308,7 @@ export const YieldCalculator: React.FC = () => {
 
               {/* Equivalency note */}
               <div className="p-4 rounded-xl bg-[#16A34A]/10 border border-[#16A34A]/30 text-xs text-[#94A3B8] font-mono leading-relaxed">
-                ⚡ Estimated Payback Period: <strong className="text-[#4ADE80] font-bold">~{paybackYearObj.year} Years</strong> under VGE Web3 capital refinancing and I-REC monetization. Provides power for <strong className="text-white font-bold">{homesPowered.toLocaleString()} households</strong>.
+                ⚡ Estimated Payback Period: <strong className="text-[#4ADE80] font-bold">~{paybackYearObj.year} Years</strong> under VGE institutional capital refinancing and I-REC monetization. Provides power for <strong className="text-white font-bold">{homesPowered.toLocaleString()} households</strong>.
               </div>
             </div>
 

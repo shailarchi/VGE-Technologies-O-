@@ -7,11 +7,11 @@ interface LiveNetworkBannerProps {
 
 const EVENTS_POOL = [
   'Node #VNM-320 (Binh Thuan) verified +427.1t CO2 dMRV yield',
-  'Node #THA-450 (Chonburi) settled +$2,480 Web3 capital dividend',
+  'Node #THA-450 (Chonburi) settled +$2,480 infrastructure capital dividend',
   'Node #JPN-380 (Kansai) ingested 92.0 MW active power telemetry',
   'Node #EST-160 (Tallinn) verified 100% SLA EU CSRD proof',
   'Node #ESP-210 (Valladolid) executed $4,120 PPA automated payout',
-  'Web3 Liquidity Vault #0x9a8f added +$500,000 underwriting pool',
+  'ESG Capital Vault #0x9a8f added +$500,000 underwriting pool',
   'Node #MYS-812 (Penang) generated +184.2 MWh clean solar yield',
   'Node #IDN-501 (Java) tokenized 310 dRECs on Polygon network'
 ];
