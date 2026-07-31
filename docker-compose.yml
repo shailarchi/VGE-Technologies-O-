@@ -1,0 +1,62 @@
+# Verde Grid Energy (VGE Technologies OÜ) — Multi-Container Docker Orchestration
+# Local development stack: PostgreSQL Database + FastAPI Backend + React Web Frontend
+
+version: '3.8'
+
+services:
+  # 1. PostgreSQL Database Service with EU CSRD Schema Bootstrapping
+  db:
+    image: postgres:16-alpine
+    container_name: verdegrid_db
+    restart: always
+    environment:
+      POSTGRES_DB: verdegrid
+      POSTGRES_USER: verde_admin
+      POSTGRES_PASSWORD: verde_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend-api/schema.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U verde_admin -d verdegrid"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. FastAPI Python Backend Service
+  backend:
+    build:
+      context: ./backend-api
+      dockerfile: Dockerfile
+    container_name: verdegrid_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://verde_admin:verde_password@db:5432/verdegrid
+      POLYGON_RPC_URL: https://rpc-amoy.polygon.technology
+      CONTRACT_ADDRESS: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
+      ADMIN_PRIVATE_KEY: "your_testnet_private_key_here"
+      API_SECRET_KEY: "your_jwt_secret_key_here"
+      FASTAPI_ENV: development
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # 3. React + Vite Web Frontend Dashboard Service
+  frontend:
+    build:
+      context: ./frontend-web
+      dockerfile: Dockerfile
+    container_name: verdegrid_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
