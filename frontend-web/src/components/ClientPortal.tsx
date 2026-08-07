@@ -12,6 +12,7 @@ import { ToastContainer, AssetAlertToast } from './ToastContainer';
 import { InverterConnectionSection } from './InverterConnectionSection';
 import { GlobalSolarMap } from './GlobalSolarMap';
 import { PaymentArchitectureSection } from './PaymentArchitectureSection';
+import { EfficiencyThresholdPanel } from './EfficiencyThresholdPanel';
 
 export type UserRole = 'viewer' | 'editor' | 'admin';
 
@@ -309,10 +310,17 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal, initia
     }
   ]);
 
+  // Connected Solar Assets Data State
+  const [plantsData, setPlantsData] = useState<SolarPlant[]>(INITIAL_PLANTS);
+  // IoT Efficiency Threshold State (% value)
+  const [efficiencyThreshold, setEfficiencyThreshold] = useState<number>(75.0);
+  const [autoEfficiencyAlertsEnabled, setAutoEfficiencyAlertsEnabled] = useState<boolean>(true);
+  const lastEfficiencyAlertTimesRef = React.useRef<{ [key: string]: number }>({});
+
   const [alertDrawerOpen, setAlertDrawerOpen] = useState<boolean>(false);
   const [alertHistory, setAlertHistory] = useState<AssetAlertToast[]>(toasts);
 
-  const currentPlant = INITIAL_PLANTS.find(p => p.id === selectedPlantId) || INITIAL_PLANTS[0];
+  const currentPlant = plantsData.find(p => p.id === selectedPlantId) || plantsData[0];
 
   // Dismiss single toast
   const handleDismissToast = (id: string) => {
@@ -413,6 +421,85 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal, initia
     setTimeout(() => setRbacToast(null), 3500);
   };
 
+  // Function to evaluate IoT assets and trigger toast if efficiency drops below threshold
+  const checkEfficiencyThresholds = useCallback((plants: SolarPlant[]) => {
+    if (!autoEfficiencyAlertsEnabled) return;
+
+    const now = Date.now();
+    plants.forEach(plant => {
+      const eff = Math.min(100, (plant.currentPowerMW / plant.capacityMWp) * 100);
+      if (eff < efficiencyThreshold) {
+        const lastAlertTime = lastEfficiencyAlertTimesRef.current[plant.id] || 0;
+        // Trigger toast at most once every 18 seconds per asset
+        if (now - lastAlertTime > 18000) {
+          lastEfficiencyAlertTimesRef.current[plant.id] = now;
+          const dropPct = Math.round(100 - eff);
+          const newAlert: AssetAlertToast = {
+            id: `toast-eff-${now}-${plant.id}`,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            assetId: plant.id,
+            assetName: plant.name,
+            type: 'production_drop',
+            dropPercentage: dropPct,
+            title: `⚡ Low Efficiency Alert (${eff.toFixed(1)}%)`,
+            message: `SCADA telemetry for ${plant.name} (${plant.country}) dropped to ${eff.toFixed(1)}% efficiency (below configured ${efficiencyThreshold.toFixed(1)}% limit). Current output: ${plant.currentPowerMW.toFixed(1)} MW / ${plant.capacityMWp} MWp.`,
+          };
+
+          setToasts(prev => [newAlert, ...prev.filter(t => t.id !== newAlert.id).slice(0, 4)]);
+          setAlertHistory(prev => [newAlert, ...prev]);
+        }
+      }
+    });
+  }, [autoEfficiencyAlertsEnabled, efficiencyThreshold]);
+
+  // Handle manual simulation of an efficiency drop for testing
+  const handleSimulateEfficiencyDrop = (plantId: string) => {
+    const targetPlant = plantsData.find(p => p.id === plantId);
+    if (!targetPlant) return;
+
+    // Set power output to 48% efficiency (well below threshold)
+    const lowPower = +(targetPlant.capacityMWp * 0.48).toFixed(1);
+    const updatedPlants = plantsData.map(p => p.id === plantId ? { ...p, currentPowerMW: lowPower, status: 'warning' as const } : p);
+    setPlantsData(updatedPlants);
+    if (plantId === selectedPlantId) {
+      setLiveGeneration(lowPower);
+    }
+
+    // Force trigger efficiency check immediately
+    const eff = Math.min(100, (lowPower / targetPlant.capacityMWp) * 100);
+    const now = Date.now();
+    lastEfficiencyAlertTimesRef.current[plantId] = now;
+    const newAlert: AssetAlertToast = {
+      id: `toast-eff-${now}-${plantId}`,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      assetId: plantId,
+      assetName: targetPlant.name,
+      type: 'production_drop',
+      dropPercentage: Math.round(100 - eff),
+      title: `⚡ Efficiency Drop Alert (${eff.toFixed(1)}%)`,
+      message: `SCADA telemetry for ${targetPlant.name} (${targetPlant.country}) dropped to ${eff.toFixed(1)}% efficiency (below configured ${efficiencyThreshold.toFixed(1)}% limit). Current output: ${lowPower} MW / ${targetPlant.capacityMWp} MWp.`,
+    };
+
+    setToasts(prev => [newAlert, ...prev.slice(0, 4)]);
+    setAlertHistory(prev => [newAlert, ...prev]);
+    setRbacToast(`Efficiency Drop Simulated: ${targetPlant.name} set to 48.0% capacity (below ${efficiencyThreshold}% threshold). Toast alert triggered.`);
+    setTimeout(() => setRbacToast(null), 4000);
+  };
+
+  const handleRestorePlantOutput = (plantId: string) => {
+    const targetPlant = plantsData.find(p => p.id === plantId);
+    if (!targetPlant) return;
+
+    const nominalPower = +(targetPlant.capacityMWp * 0.88).toFixed(1);
+    const updatedPlants = plantsData.map(p => p.id === plantId ? { ...p, currentPowerMW: nominalPower, status: 'optimal' as const } : p);
+    setPlantsData(updatedPlants);
+    if (plantId === selectedPlantId) {
+      setLiveGeneration(nominalPower);
+    }
+    setRbacToast(`Nominal Power Restored: ${targetPlant.name} output reset to ${nominalPower} MW (88.0% efficiency).`);
+    setTimeout(() => setRbacToast(null), 3500);
+  };
+
   // Live simulation tick & periodic alert simulation
   useEffect(() => {
     let interval: any;
@@ -421,23 +508,43 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal, initia
     if (isSimulatingStream) {
       interval = setInterval(() => {
         setLastUpdatedSecs(prev => (prev > 10 ? 0 : prev + 1));
-        // Subtle fluctuation in power output
-        const delta = (Math.random() - 0.48) * 0.4;
-        setLiveGeneration(prev => Math.max(0, Math.min(currentPlant.capacityMWp, +(prev + delta).toFixed(2))));
-      }, 2000);
+        
+        // Update plantsData with small real-time fluctuations
+        setPlantsData(prevPlants => {
+          const updated = prevPlants.map(p => {
+            const delta = (Math.random() - 0.48) * 0.3;
+            const newPower = Math.max(0, Math.min(p.capacityMWp, +(p.currentPowerMW + delta).toFixed(2)));
+            return {
+              ...p,
+              currentPowerMW: newPower
+            };
+          });
+          
+          // Check efficiency threshold violations on tick
+          checkEfficiencyThresholds(updated);
 
-      // Periodically trigger a random alert every 18 seconds to simulate real-time SCADA monitor
+          // Update active selected plant live generation
+          const current = updated.find(x => x.id === selectedPlantId);
+          if (current) {
+            setLiveGeneration(current.currentPowerMW);
+          }
+
+          return updated;
+        });
+      }, 2500);
+
+      // Periodically trigger a random alert every 22 seconds to simulate real-time SCADA monitor
       alertInterval = setInterval(() => {
-        if (Math.random() > 0.3) {
+        if (Math.random() > 0.4) {
           triggerNewAssetAlert();
         }
-      }, 18000);
+      }, 22000);
     }
     return () => {
       clearInterval(interval);
       clearInterval(alertInterval);
     };
-  }, [isSimulatingStream, currentPlant.capacityMWp, triggerNewAssetAlert]);
+  }, [isSimulatingStream, selectedPlantId, checkEfficiencyThresholds, triggerNewAssetAlert]);
 
   const filteredInverters = SAMPLE_INVERTERS.filter(inv => {
     if (inverterFilter === 'all') return true;
@@ -512,12 +619,12 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal, initia
                 value={selectedPlantId}
                 onChange={(e) => {
                   setSelectedPlantId(e.target.value);
-                  const p = INITIAL_PLANTS.find(x => x.id === e.target.value);
+                  const p = plantsData.find(x => x.id === e.target.value);
                   if (p) setLiveGeneration(p.currentPowerMW);
                 }}
                 className="bg-transparent text-white text-xs font-mono font-bold p-2 focus:outline-none cursor-pointer"
               >
-                {INITIAL_PLANTS.map(plant => (
+                {plantsData.map(plant => (
                   <option key={plant.id} value={plant.id} className="bg-[#0F172A] text-white">
                     {plant.name} ({plant.country}) — {plant.capacityMWp} MWp
                   </option>
@@ -765,13 +872,25 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal, initia
         {/* TAB 1: OVERVIEW & RECHARTS GRAPH */}
         {activeTab === 'overview' && (
           <div className="space-y-8">
+            {/* IoT SCADA Real-Time Efficiency Monitor & Threshold Control Panel */}
+            <EfficiencyThresholdPanel
+              efficiencyThreshold={efficiencyThreshold}
+              onThresholdChange={setEfficiencyThreshold}
+              plants={plantsData}
+              autoAlertsEnabled={autoEfficiencyAlertsEnabled}
+              onToggleAutoAlerts={() => setAutoEfficiencyAlertsEnabled(!autoEfficiencyAlertsEnabled)}
+              onSimulateEfficiencyDrop={handleSimulateEfficiencyDrop}
+              onRestorePlantOutput={handleRestorePlantOutput}
+              onInspectAsset={handleInspectAsset}
+            />
+
             {/* Global Solar Asset Interactive Map */}
             <GlobalSolarMap
-              plants={INITIAL_PLANTS}
+              plants={plantsData}
               selectedPlantId={selectedPlantId}
               onSelectPlant={(plantId) => {
                 setSelectedPlantId(plantId);
-                const p = INITIAL_PLANTS.find(x => x.id === plantId);
+                const p = plantsData.find(x => x.id === plantId);
                 if (p) setLiveGeneration(p.currentPowerMW);
               }}
             />
