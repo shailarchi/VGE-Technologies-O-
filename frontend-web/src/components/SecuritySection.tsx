@@ -39,13 +39,13 @@ export const SecuritySection: React.FC = () => {
             <div className="w-12 h-12 rounded-xl bg-[#0F172A] text-[#4ADE80] border border-[#16A34A]/30 flex items-center justify-center">
               <Lock className="w-6 h-6" />
             </div>
-            <h3 className="font-heading text-xl font-bold text-white">Zero-Trust Hardware Auth</h3>
+            <h3 className="font-heading text-xl font-bold text-white">Zero-Trust & Encryption</h3>
             <p className="text-[#94A3B8] text-sm leading-relaxed">
-              Every IoT inverter, sensor, and SCADA gateway authenticates via mTLS 1.3 with hardware-bound TPM 2.0 cryptographic certificates, preventing grid spoofing.
+              Every API endpoint and IoT telemetry channel is encrypted In-Transit using TLS 1.2 / 1.3 (mTLS). All data At-Rest is strictly secured with AES-256 encryption on AWS PostgreSQL databases.
             </p>
             <ul className="space-y-2 text-xs text-[#94A3B8] font-mono pt-2">
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#4ADE80]" /> Mutual TLS (mTLS 1.3)</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#4ADE80]" /> AES-256 Telemetry Encryption</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#4ADE80]" /> In-Transit: TLS 1.2 / 1.3 API Calls</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#4ADE80]" /> At-Rest: AES-256 AWS PostgreSQL</li>
             </ul>
           </div>
 
@@ -53,13 +53,13 @@ export const SecuritySection: React.FC = () => {
             <div className="w-12 h-12 rounded-xl bg-[#0F172A] text-[#4ADE80] border border-[#16A34A]/30 flex items-center justify-center">
               <Server className="w-6 h-6" />
             </div>
-            <h3 className="font-heading text-xl font-bold text-white">99.98% High Availability</h3>
+            <h3 className="font-heading text-xl font-bold text-white">AWS Frankfurt &amp; GuardDuty</h3>
             <p className="text-[#94A3B8] text-sm leading-relaxed">
-              Multi-region cloud failover across EU-North (Estonia) and EU-Central (Germany) guarantees continuous yield calculation, automated settlement, and O&M dispatches.
+              Hosted in AWS Frankfurt (<code className="text-[#4ADE80] font-mono">eu-central-1</code>) with automated <strong className="text-white">AWS CloudTrail</strong> API logging and continuous <strong className="text-white">AWS GuardDuty</strong> ML threat detection scanning for malicious server activity.
             </p>
             <ul className="space-y-2 text-xs text-[#94A3B8] font-mono pt-2">
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#4ADE80]" /> 99.98% SLA Guarantee</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#4ADE80]" /> 24/7 Enterprise Support</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#4ADE80]" /> AWS CloudTrail: Active Management Logging</li>
+              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#4ADE80]" /> GuardDuty Threat Detection: Active (eu-central-1)</li>
             </ul>
           </div>
 

@@ -210,3 +210,24 @@ class CsrdAuditLog(Base):
 
     # Relationships
     certificate = relationship("DrecCertificate", back_populates="audit_logs")
+
+
+class AuditLog(Base):
+    """
+    General System & Action Audit Trail.
+    Records every major backend action including energy record deletion, PPA tariff edits, and login events.
+    Guarantees recording of actor identity (who), timestamp (when), client IP address (ip_address), and action scope.
+    """
+    __tablename__ = "audit_logs"
+
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    user_id = Column(String(255), nullable=False, index=True)  # who (email or user_id)
+    action = Column(String(100), nullable=False, index=True)  # DELETE_ENERGY_RECORD, UPDATE_PPA_TARIFF, REBOOT_SCADA, etc.
+    resource_type = Column(String(100), nullable=True)  # energy_reading, ppa_contract, inverter, etc.
+    resource_id = Column(String(255), nullable=True)
+    ip_address = Column(String(45), nullable=False)  # client IPv4 or IPv6 address
+    user_agent = Column(String(255), nullable=True)
+    details = Column(Text, nullable=True)
+    status = Column(String(50), default="SUCCESS", nullable=False)  # SUCCESS, DENIED, FAILED
+    timestamp = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)  # when
+

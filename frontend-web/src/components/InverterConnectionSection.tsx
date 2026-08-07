@@ -37,7 +37,7 @@ const FAQ_LIST: FAQItem[] = [
   {
     category: 'SCADA Security',
     question: 'How does the API handle SCADA security and grid data privacy?',
-    answer: 'All API communication is locked using TLS 1.3 transport security, HMAC-SHA256 request signatures, and read-only SCADA access scopes. Verde Grid OS never requests write or control permissions over your inverter parameter settings.'
+    answer: 'All API communication is encrypted In-Transit using TLS 1.2 or TLS 1.3 transport security with HMAC-SHA256 request signatures. All telemetry data At-Rest is protected with AES-256 encryption on AWS PostgreSQL databases. Verde Grid OS operates under read-only SCADA access scopes and never requests write or control permissions over your inverter settings.'
   },
   {
     category: 'I-REC Carbon Credits',

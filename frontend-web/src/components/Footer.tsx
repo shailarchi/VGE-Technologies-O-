@@ -6,9 +6,17 @@ interface FooterProps {
   onNavigateSection: (sectionId: string) => void;
   onOpenDemo: () => void;
   onOpenLogin: () => void;
+  onOpenPrivacyPolicy?: () => void;
+  onOpenCookiePreferences?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigateSection, onOpenDemo, onOpenLogin }) => {
+export const Footer: React.FC<FooterProps> = ({
+  onNavigateSection,
+  onOpenDemo,
+  onOpenLogin,
+  onOpenPrivacyPolicy,
+  onOpenCookiePreferences,
+}) => {
   return (
     <footer className="bg-[#0B1222] border-t border-slate-800/80 pt-16 pb-12 px-4 sm:px-6 lg:px-8 text-white relative overflow-hidden">
       {/* Background ambient lighting */}
@@ -153,6 +161,24 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection, onOpenDemo, o
               </li>
               <li>
                 <button 
+                  onClick={onOpenPrivacyPolicy} 
+                  className="hover:text-[#4ADE80] hover:translate-x-1.5 transition-all duration-200 cursor-pointer flex items-center gap-2 group text-left"
+                >
+                  <ChevronRight className="w-3.5 h-3.5 text-[#16A34A] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                  <span className="text-[#4ADE80] font-semibold">GDPR Privacy Policy</span>
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={onOpenCookiePreferences} 
+                  className="hover:text-[#4ADE80] hover:translate-x-1.5 transition-all duration-200 cursor-pointer flex items-center gap-2 group text-left"
+                >
+                  <ChevronRight className="w-3.5 h-3.5 text-[#16A34A] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                  <span>Cookie Preferences</span>
+                </button>
+              </li>
+              <li>
+                <button 
                   onClick={onOpenLogin} 
                   className="hover:text-[#4ADE80] hover:translate-x-1.5 transition-all duration-200 cursor-pointer flex items-center gap-2 group text-left"
                 >
@@ -251,11 +277,27 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection, onOpenDemo, o
             </p>
           </div>
 
-          {/* Thin, small copyright notice at the very bottom */}
-          <div className="pt-4 border-t border-slate-800/60 mt-4 text-center">
-            <p className="text-slate-400 font-light text-[11px] tracking-wide hover:text-slate-200 transition-colors font-mono">
-              © 2026 VGE Technologies OÜ · All rights reserved · EU Data Residency Guaranteed
+          {/* Thin, small copyright notice & legal links at the very bottom */}
+          <div className="pt-4 border-t border-slate-800/60 mt-4 flex flex-wrap items-center justify-between gap-3 text-slate-400 font-mono text-[11px]">
+            <p className="font-light tracking-wide hover:text-slate-200 transition-colors">
+              © 2026 VGE Technologies OÜ · All rights reserved · EU Data Residency Guaranteed (Tallinn 🇪🇪)
             </p>
+
+            <div className="flex items-center gap-4">
+              <button
+                onClick={onOpenPrivacyPolicy}
+                className="text-slate-400 hover:text-[#4ADE80] underline transition-colors cursor-pointer"
+              >
+                GDPR Privacy Policy
+              </button>
+              <span>·</span>
+              <button
+                onClick={onOpenCookiePreferences}
+                className="text-slate-400 hover:text-[#4ADE80] underline transition-colors cursor-pointer"
+              >
+                Cookie Settings
+              </button>
+            </div>
           </div>
         </div>
 

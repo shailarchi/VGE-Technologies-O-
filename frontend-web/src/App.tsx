@@ -13,12 +13,16 @@ import { SecuritySection } from './components/SecuritySection';
 import { ClientPortal } from './components/ClientPortal';
 import { DemoModal } from './components/DemoModal';
 import { LoginModal } from './components/LoginModal';
+import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
+import { CookieConsent } from './components/CookieConsent';
 import { Footer } from './components/Footer';
 
 export default function App() {
   const [isDashboardOpen, setIsDashboardOpen] = useState<boolean>(false);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState<boolean>(false);
+  const [cookieTriggerCount, setCookieTriggerCount] = useState<number>(0);
 
   const handleNavigateSection = (sectionId: string) => {
     setIsDashboardOpen(false);
@@ -96,6 +100,21 @@ export default function App() {
         onNavigateSection={handleNavigateSection}
         onOpenDemo={() => setIsDemoModalOpen(true)}
         onOpenLogin={() => setIsLoginModalOpen(true)}
+        onOpenPrivacyPolicy={() => setIsPrivacyModalOpen(true)}
+        onOpenCookiePreferences={() => setCookieTriggerCount(prev => prev + 1)}
+      />
+
+      {/* GDPR Floating Cookie Consent Banner & Settings Drawer */}
+      <CookieConsent
+        onOpenPrivacyPolicy={() => setIsPrivacyModalOpen(true)}
+        forceOpenTrigger={cookieTriggerCount}
+      />
+
+      {/* GDPR Privacy Policy & Compliance Notice Modal */}
+      <PrivacyPolicyModal
+        isOpen={isPrivacyModalOpen}
+        onClose={() => setIsPrivacyModalOpen(false)}
+        onOpenCookiePreferences={() => setCookieTriggerCount(prev => prev + 1)}
       />
 
       {/* Modals */}

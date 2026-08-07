@@ -131,6 +131,25 @@ CREATE TABLE IF NOT EXISTS csrd_audit_logs (
     timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
+-- 8. General System & Action Audit Trail Table
+-- Mandatory EU CSRD & NIS2 requirement logging who, when, and client IP address for major actions
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id BIGSERIAL PRIMARY KEY,
+    user_id VARCHAR(255) NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    resource_type VARCHAR(100),
+    resource_id VARCHAR(255),
+    ip_address VARCHAR(45) NOT NULL,
+    user_agent VARCHAR(255),
+    details TEXT,
+    status VARCHAR(50) DEFAULT 'SUCCESS' NOT NULL,
+    timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_audit_logs_user_id ON audit_logs(user_id);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_action ON audit_logs(action);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_timestamp ON audit_logs(timestamp DESC);
+
 -- Initial Seed Data
 INSERT INTO organizations (id, name, registration_number, country, industry, corporate_wallet, contact_email)
 VALUES 
@@ -141,3 +160,10 @@ INSERT INTO solar_installations (installation_id, organization_id, name, country
 VALUES 
 ('FAC-MY-PENANG-004', 'penang-solar', 'Penang Solar Park (15 MWp)', 'Malaysia', 'Penang', 15000.0, 'Sungrow', 'SUNGROW-SG250-88A1', '2024-01-15 00:00:00+00')
 ON CONFLICT (installation_id) DO NOTHING;
+
+INSERT INTO audit_logs (user_id, action, resource_type, resource_id, ip_address, user_agent, details, status, timestamp)
+VALUES
+('esg.director@penangsolar.my', 'DELETE_ENERGY_RECORD', 'energy_reading', 'REC-2026-0814', '192.168.1.104', 'Mozilla/5.0 (X11; Linux x86_64)', 'User deleted corrupted IoT telemetry record #REC-2026-0814 due to sensor calibration artifact.', 'SUCCESS', CURRENT_TIMESTAMP - INTERVAL '1 hour'),
+('system.admin@vge.ee', 'UPDATE_PPA_TARIFF', 'ppa_contract', 'VGE-PPA-MY-01', '10.0.4.88', 'VGE-Control-Panel/1.0', 'Modified PPA tariff rate to 68.5 EUR/MWh for Penang Solar Park.', 'SUCCESS', CURRENT_TIMESTAMP - INTERVAL '3 hours'),
+('esg.director@penangsolar.my', 'MINT_DREC_CERTIFICATE', 'drec_certificate', 'VGE-IREC-2026-001', '192.168.1.104', 'Mozilla/5.0 (X11; Linux x86_64)', 'Minted 150.5 MWh dREC Certificate on Polygon EVM blockchain.', 'SUCCESS', CURRENT_TIMESTAMP - INTERVAL '1 day');
+
