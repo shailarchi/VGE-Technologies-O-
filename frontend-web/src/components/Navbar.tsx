@@ -113,58 +113,122 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Right CTA Actions & Language Selector - Desktop */}
         <div className="hidden md:flex items-center gap-3.5">
           
-          {/* Language Selector Dropdown */}
-          <div className="relative" ref={dropdownRef}>
+          {/* Core Target Market Quick Switcher & Language Dropdown */}
+          <div className="flex items-center bg-slate-900/90 border border-slate-700/80 rounded-2xl p-1 shadow-inner gap-1 relative" ref={dropdownRef}>
+            
+            {/* Core Markets Segmented Quick Buttons (EN, ET, ZH) */}
+            <div className="flex items-center gap-0.5 border-r border-slate-800 pr-1">
+              {LANGUAGES.slice(0, 3).map((lang) => {
+                const isSelected = currentLanguage.code === lang.code;
+                return (
+                  <button
+                    key={lang.code}
+                    type="button"
+                    onClick={() => setLanguage(lang)}
+                    className={`px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-[#16A34A] text-white shadow-md shadow-emerald-950/80 ring-1 ring-[#4ADE80]/50'
+                        : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/80'
+                    }`}
+                    title={`Switch to ${lang.name} (${lang.nativeName}) - Core Market`}
+                  >
+                    <span className="text-sm leading-none">{lang.flag}</span>
+                    <span>{lang.code.toUpperCase()}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Dropdown Trigger Button for All Languages */}
             <button
               type="button"
               onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-              className="flex items-center gap-2 bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 hover:border-[#16A34A]/60 px-3 py-2 rounded-xl text-xs font-mono font-medium transition-all shadow-inner cursor-pointer"
-              title="Select Platform Language"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-mono font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all cursor-pointer"
+              title="More Global Languages"
             >
               <Globe className="w-3.5 h-3.5 text-[#4ADE80]" />
-              <span className="text-sm leading-none">{currentLanguage.flag}</span>
-              <span className="font-bold tracking-wider">{currentLanguage.code.toUpperCase()}</span>
               <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${langDropdownOpen ? 'rotate-180 text-[#4ADE80]' : ''}`} />
             </button>
 
             {/* Language Menu Overlay */}
             {langDropdownOpen && (
-              <div className="absolute right-0 mt-2.5 w-60 bg-[#0B1329] border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden z-50 py-1.5 backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-200 ring-1 ring-white/10">
-                <div className="px-3.5 py-2 border-b border-slate-800 text-[10px] font-mono font-bold uppercase text-slate-400 tracking-wider flex items-center justify-between">
+              <div className="absolute right-0 top-full mt-2.5 w-64 bg-[#0B1329] border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden z-50 py-2 backdrop-blur-2xl animate-in fade-in slide-in-from-top-2 duration-200 ring-1 ring-white/10">
+                <div className="px-3.5 py-1.5 border-b border-slate-800 text-[10px] font-mono font-bold uppercase text-[#4ADE80] tracking-wider flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
                     <Globe className="w-3 h-3 text-[#4ADE80]" />
-                    Global Language
+                    Core VGE Target Markets
                   </span>
-                  <span className="text-[#4ADE80] font-extrabold">{LANGUAGES.length} Available</span>
+                  <span className="text-slate-400 font-extrabold">{LANGUAGES.length} Languages</span>
                 </div>
-                <div className="max-h-64 overflow-y-auto divide-y divide-slate-800/50">
-                  {LANGUAGES.map((lang) => {
-                    const isSelected = currentLanguage.code === lang.code;
-                    return (
-                      <button
-                        key={lang.code}
-                        type="button"
-                        onClick={() => {
-                          setLanguage(lang);
-                          setLangDropdownOpen(false);
-                        }}
-                        className={`w-full text-left px-3.5 py-2.5 text-xs font-mono flex items-center justify-between transition-all cursor-pointer ${
-                          isSelected 
-                            ? 'bg-[#16A34A]/20 text-[#4ADE80] font-bold border-l-2 border-[#4ADE80]' 
-                            : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="text-base">{lang.flag}</span>
-                          <div>
-                            <div className="font-semibold leading-tight">{lang.name}</div>
-                            <div className="text-[10px] text-slate-400 font-sans">{lang.nativeName}</div>
+
+                <div className="p-1 divide-y divide-slate-800/50 max-h-72 overflow-y-auto">
+                  {/* Primary Target Markets (EN, ET, ZH) */}
+                  <div className="pb-1.5 space-y-0.5">
+                    {LANGUAGES.slice(0, 3).map((lang) => {
+                      const isSelected = currentLanguage.code === lang.code;
+                      return (
+                        <button
+                          key={lang.code}
+                          type="button"
+                          onClick={() => {
+                            setLanguage(lang);
+                            setLangDropdownOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded-xl text-xs font-mono flex items-center justify-between transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-[#16A34A]/25 text-[#4ADE80] font-bold border-l-2 border-[#4ADE80]'
+                              : 'text-slate-200 hover:bg-slate-800/80 hover:text-white'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-base">{lang.flag}</span>
+                            <div>
+                              <div className="font-semibold leading-tight flex items-center gap-1.5">
+                                {lang.name}
+                                <span className="text-[9px] bg-[#16A34A]/30 text-[#4ADE80] px-1.5 py-0.2 rounded font-mono font-bold uppercase">Core</span>
+                              </div>
+                              <div className="text-[10px] text-slate-400 font-sans">{lang.nativeName}</div>
+                            </div>
                           </div>
-                        </div>
-                        {isSelected && <Check className="w-4 h-4 text-[#4ADE80] shrink-0" />}
-                      </button>
-                    );
-                  })}
+                          {isSelected && <Check className="w-4 h-4 text-[#4ADE80] shrink-0" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Secondary Global Markets */}
+                  <div className="pt-1.5 space-y-0.5">
+                    <div className="px-3 py-1 text-[9px] font-mono font-bold uppercase text-slate-500 tracking-wider">
+                      Additional Global Markets
+                    </div>
+                    {LANGUAGES.slice(3).map((lang) => {
+                      const isSelected = currentLanguage.code === lang.code;
+                      return (
+                        <button
+                          key={lang.code}
+                          type="button"
+                          onClick={() => {
+                            setLanguage(lang);
+                            setLangDropdownOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded-xl text-xs font-mono flex items-center justify-between transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-[#16A34A]/25 text-[#4ADE80] font-bold border-l-2 border-[#4ADE80]'
+                              : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-base">{lang.flag}</span>
+                            <div>
+                              <div className="font-semibold leading-tight">{lang.name}</div>
+                              <div className="text-[10px] text-slate-400 font-sans">{lang.nativeName}</div>
+                            </div>
+                          </div>
+                          {isSelected && <Check className="w-4 h-4 text-[#4ADE80] shrink-0" />}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}
@@ -217,12 +281,41 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="md:hidden bg-[#0F172A] border-b border-[#1E293B] px-4 pt-2 pb-6 space-y-4">
           
           {/* Mobile Language Selector Grid */}
-          <div className="bg-[#1E293B]/80 p-3 rounded-xl border border-white/10 space-y-2">
-            <div className="text-[11px] font-mono text-slate-400 font-semibold uppercase tracking-wider flex items-center gap-1.5 mb-1">
-              <Globe className="w-3.5 h-3.5 text-[#4ADE80]" />
-              Select Language ({currentLanguage.name})
+          <div className="bg-[#1E293B]/80 p-3 rounded-2xl border border-white/10 space-y-2.5">
+            <div className="text-[11px] font-mono text-[#4ADE80] font-bold uppercase tracking-wider flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <Globe className="w-3.5 h-3.5 text-[#4ADE80]" />
+                Target Market Switcher
+              </span>
+              <span className="text-slate-400 font-mono text-[10px]">{currentLanguage.code.toUpperCase()} Active</span>
             </div>
-            <div className="grid grid-cols-2 gap-1.5 max-h-36 overflow-y-auto pr-1">
+
+            {/* Core Markets Quick Switcher Row */}
+            <div className="grid grid-cols-3 gap-1.5 bg-[#0F172A] p-1 rounded-xl border border-slate-700/60">
+              {LANGUAGES.slice(0, 3).map((lang) => {
+                const isSelected = currentLanguage.code === lang.code;
+                return (
+                  <button
+                    key={lang.code}
+                    onClick={() => {
+                      setLanguage(lang);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`flex items-center justify-center gap-1.5 py-2 px-1 rounded-lg text-xs font-mono font-bold transition-all ${
+                      isSelected
+                        ? 'bg-[#16A34A] text-white shadow-md shadow-emerald-950/80 ring-1 ring-[#4ADE80]'
+                        : 'text-slate-300 hover:bg-slate-800'
+                    }`}
+                  >
+                    <span>{lang.flag}</span>
+                    <span>{lang.code.toUpperCase()}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* All Languages Grid */}
+            <div className="grid grid-cols-2 gap-1.5 max-h-32 overflow-y-auto pr-1 pt-1 border-t border-slate-800">
               {LANGUAGES.map((lang) => {
                 const isSelected = currentLanguage.code === lang.code;
                 return (
@@ -234,7 +327,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }}
                     className={`flex items-center gap-2 p-1.5 rounded-lg text-xs font-mono transition-colors text-left ${
                       isSelected 
-                        ? 'bg-[#16A34A] text-white font-bold' 
+                        ? 'bg-[#16A34A]/30 text-[#4ADE80] font-bold border-l-2 border-[#4ADE80]' 
                         : 'bg-[#0F172A] text-slate-300 hover:bg-slate-800'
                     }`}
                   >

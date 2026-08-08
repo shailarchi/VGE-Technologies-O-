@@ -10,15 +10,15 @@ export interface Language {
 
 export const LANGUAGES: Language[] = [
   { code: 'en', name: 'English', nativeName: 'English (Global)', flag: '🇬🇧', googleCode: 'en' },
+  { code: 'et', name: 'Estonian', nativeName: 'Eesti (EU HQ)', flag: '🇪🇪', googleCode: 'et' },
+  { code: 'zh', name: 'Mandarin', nativeName: '普通话 (中文)', flag: '🇨🇳', googleCode: 'zh-CN' },
   { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳', googleCode: 'hi' },
   { code: 'ja', name: 'Japanese', nativeName: '日本語', flag: '🇯🇵', googleCode: 'ja' },
-  { code: 'et', name: 'Estonian', nativeName: 'Eesti (EU)', flag: '🇪🇪', googleCode: 'et' },
   { code: 'de', name: 'German', nativeName: 'Deutsch', flag: '🇩🇪', googleCode: 'de' },
   { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt', flag: '🇻🇳', googleCode: 'vi' },
   { code: 'th', name: 'Thai', nativeName: 'ไทย', flag: '🇹🇭', googleCode: 'th' },
   { code: 'fr', name: 'French', nativeName: 'Français', flag: '🇫🇷', googleCode: 'fr' },
   { code: 'es', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸', googleCode: 'es' },
-  { code: 'zh', name: 'Chinese', nativeName: '中文', flag: '🇨🇳', googleCode: 'zh-CN' },
 ];
 
 // Dictionary of translations for primary UI elements across 10 languages

@@ -3,7 +3,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend 
 } from 'recharts';
 import { 
-  Sun, Activity, Cpu, DollarSign, Leaf, RefreshCw, AlertTriangle, ShieldCheck, Zap, Download, Radio, Filter, Building2, SlidersHorizontal, CheckCircle2, ArrowRight, Bell, ShieldAlert, Sparkles, X, Eye, Edit3, Lock, Users, Key, UserCheck, Shield, Check, Info, Trash2, Database, Globe, CreditCard
+  Sun, Activity, Cpu, DollarSign, Leaf, RefreshCw, AlertTriangle, ShieldCheck, Zap, Download, Radio, Filter, Building2, SlidersHorizontal, CheckCircle2, ArrowRight, Bell, ShieldAlert, Sparkles, X, Eye, Edit3, Lock, Users, Key, UserCheck, Shield, Check, Info, Trash2, Database, Globe, CreditCard, Wrench
 } from 'lucide-react';
 import { INITIAL_PLANTS, HOURLY_GENERATION_DATA, SAMPLE_INVERTERS, ACTIVE_PPA_CONTRACTS } from '../data/mockData';
 import { SolarPlant, InverterTelemetry } from '../types';
@@ -13,6 +13,7 @@ import { InverterConnectionSection } from './InverterConnectionSection';
 import { GlobalSolarMap } from './GlobalSolarMap';
 import { PaymentArchitectureSection } from './PaymentArchitectureSection';
 import { EfficiencyThresholdPanel } from './EfficiencyThresholdPanel';
+import { MaintenanceReminderPanel } from './MaintenanceReminderPanel';
 
 export type UserRole = 'viewer' | 'editor' | 'admin';
 
@@ -69,7 +70,7 @@ const SIMULATED_ALERTS_POOL: Omit<AssetAlertToast, 'id' | 'timestamp'>[] = [
 
 export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal, initialRole = 'admin' }) => {
   const [selectedPlantId, setSelectedPlantId] = useState<string>('vge-est-01');
-  const [activeTab, setActiveTab] = useState<'overview' | 'inverters' | 'ppa' | 'events' | 'rbac' | 'billing'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'inverters' | 'ppa' | 'events' | 'rbac' | 'billing' | 'maintenance'>('overview');
   const [inverterFilter, setInverterFilter] = useState<'all' | 'normal' | 'overheat' | 'offline'>('all');
   const [liveGeneration, setLiveGeneration] = useState<number>(36.2);
   const [lastUpdatedSecs, setLastUpdatedSecs] = useState<number>(0);
@@ -844,6 +845,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal, initia
         <div className="flex items-center gap-2 border-b border-[#1E293B] pb-4 mb-8 overflow-x-auto">
           {[
             { id: 'overview', label: 'Generation & Solar Curve', icon: Sun },
+            { id: 'maintenance', label: 'Site Maintenance & Reminders', icon: Wrench },
             { id: 'inverters', label: `IoT Inverters (${inverters.length})`, icon: Cpu },
             { id: 'ppa', label: 'B2B PPA & Settlement', icon: DollarSign },
             { id: 'billing', label: 'Payment Architecture & Treasury', icon: CreditCard },
@@ -872,6 +874,33 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal, initia
         {/* TAB 1: OVERVIEW & RECHARTS GRAPH */}
         {activeTab === 'overview' && (
           <div className="space-y-8">
+            {/* Quick Maintenance Reminder Alert Banner */}
+            <div className="bg-gradient-to-r from-amber-950/80 via-[#1E293B] to-[#0F172A] border border-amber-500/50 rounded-2xl p-4 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs">
+              <div className="flex items-center gap-3">
+                <span className="p-2 bg-amber-500/20 border border-amber-500/40 rounded-xl text-amber-400 shrink-0">
+                  <Wrench className="w-4 h-4 animate-bounce" />
+                </span>
+                <div>
+                  <div className="flex items-center gap-2 font-bold text-amber-200">
+                    <span>Automated Maintenance Alert: 2 Solar Sites Require Inspection</span>
+                    <span className="bg-red-500/20 text-red-300 border border-red-500/40 px-2 py-0.5 rounded text-[10px] uppercase font-bold">2 OVERDUE</span>
+                  </div>
+                  <p className="text-slate-300 text-[11px] mt-0.5">
+                    Penang Solar Park (+2,850 MWh over 40k limit) & Binh Thuan C&I (200 days since last service) triggered automated inspection reminders.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('maintenance')}
+                className="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 rounded-xl font-bold flex items-center gap-1.5 shrink-0 cursor-pointer transition-all shadow-md shadow-amber-950/60"
+              >
+                <span>Manage Maintenance</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
             {/* IoT SCADA Real-Time Efficiency Monitor & Threshold Control Panel */}
             <EfficiencyThresholdPanel
               efficiencyThreshold={efficiencyThreshold}
@@ -1593,6 +1622,16 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onExitPortal, initia
 
             </div>
           </div>
+        )}
+
+        {/* TAB 7: MAINTENANCE & INSPECTION REMINDERS */}
+        {activeTab === 'maintenance' && (
+          <MaintenanceReminderPanel
+            plants={plantsData}
+            canEdit={canEdit}
+            onTriggerRbacDenied={triggerRbacDenied}
+            onInspectAsset={handleInspectAsset}
+          />
         )}
 
         {/* TAB 6: PAYMENT ARCHITECTURE & TREASURY */}

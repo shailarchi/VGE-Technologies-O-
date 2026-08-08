@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { 
   FileSpreadsheet, Download, CheckCircle, Shield, Award, Sparkles, FileText, Lock, 
   Globe, Building2, Check, ShieldCheck, Layers, FileCheck, TrendingUp, BarChart3, 
-  PieChart as PieChartIcon, Target, Activity, ArrowUpRight 
+  PieChart as PieChartIcon, Target, Activity, ArrowUpRight, Printer, FileCheck2
 } from 'lucide-react';
+import { generateIrecAuditPdf } from '../utils/pdfGenerator';
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -20,7 +21,7 @@ import {
   Cell
 } from 'recharts';
 
-interface ComplianceFramework {
+export interface ComplianceFramework {
   id: string;
   name: string;
   code: string;
@@ -64,7 +65,7 @@ const COMPLIANCE_FRAMEWORKS: ComplianceFramework[] = [
   }
 ];
 
-interface GridFactor {
+export interface GridFactor {
   country: string;
   gridName: string;
   factorKgKwh: number;
@@ -244,7 +245,42 @@ export const EsgStudio: React.FC = () => {
   const calculatedCo2Tonnes = (totalMwhGenerated * selectedGrid.factorKgKwh).toFixed(1);
   const totalInstalledMwp = GRID_FACTORS.reduce((acc, curr) => acc + curr.mwpInstalled, 0);
 
+  const handleGeneratePdfReport = () => {
+    setIsExporting(true);
+    setExportedSuccess(false);
+
+    try {
+      generateIrecAuditPdf(
+        selectedOrg,
+        activeFramework,
+        accountingMethod,
+        selectedGrid,
+        period,
+        progressPct,
+        currentCo2AvoidedTonnes,
+        targetCo2AvoidedTonnes,
+        remainingIrecMwh,
+        remainingCo2Tonnes,
+        monthlyGhgData
+      );
+
+      setTimeout(() => {
+        setIsExporting(false);
+        setExportedSuccess(true);
+        setTimeout(() => setExportedSuccess(false), 5000);
+      }, 800);
+    } catch (err) {
+      console.error('PDF Generation error:', err);
+      setIsExporting(false);
+    }
+  };
+
   const handleExport = (format: string) => {
+    if (format === 'PDF') {
+      handleGeneratePdfReport();
+      return;
+    }
+
     setIsExporting(true);
     setExportedSuccess(false);
 
@@ -304,22 +340,34 @@ export const EsgStudio: React.FC = () => {
               </p>
             </div>
 
-            {/* Organization Selector */}
+            {/* Organization Selector & One-Click PDF Audit Button */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-              <label className="text-xs font-mono font-bold text-slate-300 uppercase shrink-0">
-                Select Organization:
-              </label>
-              <select
-                value={selectedOrgId}
-                onChange={(e) => setSelectedOrgId(e.target.value)}
-                className="bg-[#0F172A] text-white border border-[#16A34A]/60 rounded-xl px-3.5 py-2 text-xs font-mono font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#4ADE80] hover:border-[#4ADE80] transition-all shadow-md"
+              <div className="flex items-center gap-2">
+                <label className="text-xs font-mono font-bold text-slate-300 uppercase shrink-0">
+                  Select Org:
+                </label>
+                <select
+                  value={selectedOrgId}
+                  onChange={(e) => setSelectedOrgId(e.target.value)}
+                  className="bg-[#0F172A] text-white border border-[#16A34A]/60 rounded-xl px-3.5 py-2 text-xs font-mono font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#4ADE80] hover:border-[#4ADE80] transition-all shadow-md"
+                >
+                  {ORGANIZATIONS_DATA.map((org) => (
+                    <option key={org.id} value={org.id}>
+                      {org.flag} {org.name} ({org.country})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                onClick={handleGeneratePdfReport}
+                disabled={isExporting}
+                className="bg-[#16A34A] hover:bg-[#22C55E] text-white px-4 py-2 rounded-xl text-xs font-bold font-mono transition-all shadow-lg shadow-emerald-950/60 flex items-center gap-2 cursor-pointer border border-[#4ADE80]/40 disabled:opacity-50"
+                title="Generate certified one-click PDF audit report based on cumulative I-REC progress"
               >
-                {ORGANIZATIONS_DATA.map((org) => (
-                  <option key={org.id} value={org.id}>
-                    {org.flag} {org.name} ({org.country})
-                  </option>
-                ))}
-              </select>
+                <FileCheck2 className="w-4 h-4 text-[#4ADE80]" />
+                <span>{isExporting ? 'Generating PDF...' : 'One-Click I-REC PDF Audit Report'}</span>
+              </button>
             </div>
           </div>
 
