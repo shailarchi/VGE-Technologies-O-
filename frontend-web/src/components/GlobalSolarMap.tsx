@@ -5,14 +5,98 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster';
+import 'leaflet.heat';
 import { SolarPlant } from '../types';
-import { Sun, Zap, ShieldCheck, AlertTriangle, Activity, ArrowRight, Compass, Layers, Building2, Grid, Globe, Moon, Map as MapIcon } from 'lucide-react';
+import { Sun, Zap, ShieldCheck, AlertTriangle, Activity, ArrowRight, Compass, Layers, Building2, Grid, Globe, Moon, Map as MapIcon, Flame } from 'lucide-react';
 
 interface GlobalSolarMapProps {
   plants: SolarPlant[];
   selectedPlantId: string;
   onSelectPlant: (plantId: string) => void;
 }
+
+// HeatmapLayer component to render global energy production intensity heatmap
+const HeatmapLayer: React.FC<{
+  plants: SolarPlant[];
+  showHeatmap: boolean;
+}> = ({ plants, showHeatmap }) => {
+  const map = useMap();
+  const heatLayerRef = useRef<L.Layer | null>(null);
+
+  useEffect(() => {
+    if (!map) return;
+
+    if (showHeatmap) {
+      // Build heatmap intensity points [lat, lng, intensity]
+      const heatPoints: Array<[number, number, number]> = [];
+
+      plants.forEach(plant => {
+        const baseLat = plant.coordinates.lat;
+        const baseLng = plant.coordinates.lng;
+        // Intensity calculated from live power output vs capacity
+        const powerRatio = plant.capacityMWp > 0 ? plant.currentPowerMW / plant.capacityMWp : 0.8;
+        const baseIntensity = Math.max(0.25, Math.min(1.0, powerRatio));
+
+        // Primary asset location high-intensity point
+        heatPoints.push([baseLat, baseLng, baseIntensity]);
+
+        // Surrounding grid nodes for realistic thermal distribution
+        const nodeOffsets = [
+          [0.12, 0.08, 0.85],
+          [-0.10, -0.12, 0.75],
+          [0.08, -0.15, 0.80],
+          [-0.14, 0.11, 0.70],
+          [0.22, 0.18, 0.60],
+          [-0.20, -0.22, 0.55],
+          [0.05, 0.25, 0.65],
+          [-0.25, 0.05, 0.50],
+        ];
+
+        nodeOffsets.forEach(([dLat, dLng, weight]) => {
+          heatPoints.push([
+            baseLat + dLat,
+            baseLng + dLng,
+            parseFloat((baseIntensity * weight).toFixed(2))
+          ]);
+        });
+      });
+
+      if (!heatLayerRef.current) {
+        heatLayerRef.current = (L as any).heatLayer(heatPoints, {
+          radius: 38,
+          blur: 24,
+          maxZoom: 11,
+          max: 1.0,
+          minOpacity: 0.35,
+          gradient: {
+            0.2: '#0284C7', // Sky Blue (Low Generation)
+            0.4: '#06B6D4', // Cyan
+            0.6: '#10B981', // Emerald Green (Nominal)
+            0.8: '#F59E0B', // Amber (High Yield)
+            1.0: '#EF4444', // Crimson Red (Peak Production Density)
+          }
+        });
+        map.addLayer(heatLayerRef.current!);
+      } else {
+        (heatLayerRef.current as any).setLatLngs(heatPoints);
+      }
+    } else {
+      if (heatLayerRef.current) {
+        map.removeLayer(heatLayerRef.current);
+        heatLayerRef.current = null;
+      }
+    }
+
+    return () => {
+      if (heatLayerRef.current && map) {
+        map.removeLayer(heatLayerRef.current);
+        heatLayerRef.current = null;
+      }
+    };
+  }, [map, plants, showHeatmap]);
+
+  return null;
+};
 
 // ClusteredMarkers component to manage Leaflet.markercluster directly inside MapContainer
 const ClusteredMarkers: React.FC<{
@@ -253,6 +337,7 @@ const createCustomMarker = (status: SolarPlant['status'], powerMW: number, isSel
 export const GlobalSolarMap: React.FC<GlobalSolarMapProps> = ({ plants, selectedPlantId, onSelectPlant }) => {
   const [filterStatus, setFilterStatus] = useState<'all' | 'optimal' | 'warning'>('all');
   const [enableClustering, setEnableClustering] = useState<boolean>(true);
+  const [showHeatmap, setShowHeatmap] = useState<boolean>(true);
   const [mapStyle, setMapStyle] = useState<'dark' | 'satellite' | 'street'>('dark');
   const [mapCenter, setMapCenter] = useState<[number, number]>([35.0, 30.0]);
   const [mapZoom, setMapZoom] = useState<number>(2.5);
@@ -337,6 +422,19 @@ export const GlobalSolarMap: React.FC<GlobalSolarMapProps> = ({ plants, selected
               Streets
             </button>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setShowHeatmap(!showHeatmap)}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer border ${
+              showHeatmap
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-sm shadow-amber-950/50'
+                : 'bg-[#0F172A] text-slate-400 border-slate-700 hover:text-white'
+            }`}
+          >
+            <Flame className={`w-3.5 h-3.5 ${showHeatmap ? 'text-amber-400 animate-pulse' : 'text-slate-500'}`} />
+            Heatmap: {showHeatmap ? 'ON' : 'OFF'}
+          </button>
 
           <button
             type="button"
@@ -434,6 +532,8 @@ export const GlobalSolarMap: React.FC<GlobalSolarMapProps> = ({ plants, selected
             </LayersControl.BaseLayer>
           </LayersControl>
 
+          <HeatmapLayer plants={filteredPlants} showHeatmap={showHeatmap} />
+
           <ClusteredMarkers
             plants={filteredPlants}
             selectedPlantId={selectedPlantId}
@@ -441,6 +541,28 @@ export const GlobalSolarMap: React.FC<GlobalSolarMapProps> = ({ plants, selected
             enableClustering={enableClustering}
           />
         </MapContainer>
+
+        {/* Floating Heatmap Intensity Legend Overlay */}
+        {showHeatmap && (
+          <div className="absolute bottom-4 left-4 z-[400] bg-[#0F172A]/90 backdrop-blur-md border border-slate-700/80 rounded-2xl p-3 shadow-2xl max-w-xs pointer-events-auto">
+            <div className="flex items-center justify-between text-[11px] font-mono font-bold text-white mb-1.5">
+              <span className="flex items-center gap-1.5 text-amber-400">
+                <Flame className="w-3.5 h-3.5 animate-pulse text-amber-400" />
+                Global Energy Production Intensity
+              </span>
+            </div>
+            
+            {/* Color Gradient Scale */}
+            <div className="h-2.5 w-full rounded-full bg-gradient-to-r from-sky-500 via-cyan-400 via-emerald-400 via-amber-400 to-red-500 shadow-inner my-1"></div>
+
+            <div className="flex justify-between text-[9px] font-mono text-slate-400 mt-1">
+              <span>Low (&lt;25%)</span>
+              <span>Nominal (50%)</span>
+              <span>High (75%)</span>
+              <span className="text-red-400 font-bold">Peak (100% MW)</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Quick Select Carousel Bar Below Map */}
